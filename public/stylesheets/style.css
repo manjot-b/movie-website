@@ -30,3 +30,13 @@ a {
   font: 20px;
   color: white;
 }
+
+ul {
+  list-style-type: none;
+}
+
+.activity li {
+  
+  font-size: 14px;
+  line-height: 5em;
+}

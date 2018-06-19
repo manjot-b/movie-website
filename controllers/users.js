@@ -12,5 +12,10 @@ exports.dashboard_get = (req, res) => {
     // return res.status(200).send("username: " + req.session.user.username + 
     // " password: " + req.session.user.password);
 
-    res.status(200).render('dashboard');
+    //test values for activities
+    var micopost = {username:"Mico", type:"review", movie:"Avengers"};
+    var manjotpost = {username:"Manjot", type:"added", movie:"Spider-Man", list:"Movies to watch"};
+    var jonapost = {username:"Jona", type:"review", movie:"Riverdale"};
+    var activities = [micopost, manjotpost, jonapost];
+    res.status(200).render('dashboard', {activities: activities});
 };

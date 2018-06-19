@@ -1,5 +1,13 @@
 extends layout
 
+mixin review_activity(username, movie)
+  .review_activity-wrapper
+    p #[em #{username}] has posted a review on #[em #{movie}]
+
+mixin added_activity(username, movie, movielist)
+  .added_activity-wrapper
+    p #[em #{username}] has added #[em #{movie}] to their media list: #[em #{movielist}]
+
 block content
   div(class="nav")
     ul
@@ -9,3 +17,16 @@ block content
       li Search
       li My Media
       li Profile
+
+
+  div(class="activity")
+    h2 Recent Activity 
+      ul
+        each activity in activities
+          if !activity.list
+            li 
+              +review_activity(activity.username, activity.movie)
+          else if activity.list
+            li
+              +added_activity(activity.username, activity.movie, activity.list)
+        
