@@ -12,5 +12,5 @@ exports.dashboard_get = (req, res) => {
     // return res.status(200).send("username: " + req.session.user.username + 
     // " password: " + req.session.user.password);
 
-    res.status(200).render('dashboard');
+    res.status(200).render('dashboard', {title: 'Home'});
 };

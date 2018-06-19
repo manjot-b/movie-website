@@ -1,14 +1,17 @@
-extends layout
-
-block content
-  div(class="login")
-    form(action="/users/login", class="login_form", method="POST")
-      label(for="username") Username
-      br 
-      input(type="text", name="username", id="username")
-      br
-      label(for="password") Password
-      br
-      input(type="password", name="password", id="password")
-      br
-      input(type="submit", value="Log In")
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    div(class="login")
+      form(action="/users/login", class="login_form", method="POST")
+        label(for="username") Username
+        br 
+        input(type="text", name="username", id="username")
+        br
+        label(for="password") Password
+        br
+        input(type="password", name="password", id="password")
+        br
+        input(type="submit", value="Log In")
