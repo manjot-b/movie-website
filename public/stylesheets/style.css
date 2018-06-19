@@ -30,3 +30,8 @@ a {
   font: 20px;
   color: white;
 }
+
+.error_msg ul {
+  list-style-type: none;
+  color: #cf0000;
+}

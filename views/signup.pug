@@ -1,0 +1,41 @@
+doctype html
+html
+  head
+    title Sign Up
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    div(class="login")
+      form(action="/users/signup", class="login_form", method="POST")
+        label(for="first_name") First Name
+        br 
+        input(type="text", name="firstName", id="first_name")
+        br
+
+        label(for="last_name") Last Name
+        br 
+        input(type="text", name="lastName", id="last_name")
+        br
+
+        label(for="email") Email
+        br 
+        input(type="email", name="email", id="email")
+        br
+
+        label(for="username") Username
+        br 
+        input(type="text", name="username", id="username")
+        br
+
+        label(for="password") Password
+        br
+        input(type="password", name="password", id="password")
+        br
+
+        input(type="submit", value="Sign Up")
+        br
+
+        div(class="error_msg")
+          ul
+            each err in errors
+              li #{err}
+        
