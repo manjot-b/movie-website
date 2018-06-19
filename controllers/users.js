@@ -1,5 +1,11 @@
 var user = require('../sessions/user');
 
+//TEST CODE
+var micopost = {username:"Mico", type:"review", movie:"Avengers"};
+var manjotpost = {username:"Manjot", type:"added", movie:"Spider-Man", list:"Movies to watch"};
+var jonapost = {username:"Jona", type:"review", movie:"Riverdale"};
+var activities = [micopost, manjotpost, jonapost];
+
 exports.login_post = (req, res) => {
     user.username = req.body.username;
     user.password = req.body.password;
@@ -12,11 +18,11 @@ exports.dashboard_get = (req, res) => {
     if (!req.session.user) {
         res.status(401).send('Access Denied.');
     }
-
-    // return res.status(200).send("username: " + req.session.user.username + 
-    // " password: " + req.session.user.password);
-    console.log(req.session.user);
-    res.status(200).render('dashboard', {username: req.session.user.username});
+        
+    res.status(200).render('dashboard', {
+            activities: activities, 
+            username: req.session.user.username
+    });
 };
 
 exports.login_get = (req, res) => {
@@ -55,5 +61,8 @@ exports.signup_post = (req, res) => {
     user.password = req.body.password;
 
     req.session.user = user;
-    res.render('dashboard', { username: user.username })
+    res.render('dashboard', { 
+        activities: activities, 
+        username: user.username 
+    })
 };

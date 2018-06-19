@@ -35,3 +35,12 @@ a {
   list-style-type: none;
   color: #cf0000;
 }
+.activity ul {
+  list-style-type: none;
+}
+
+.activity li {
+  
+  font-size: 14px;
+  line-height: 5em;
+}
