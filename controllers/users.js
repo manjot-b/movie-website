@@ -6,9 +6,11 @@ exports.login_post = (req, res) => {
 
 exports.dashboard_get = (req, res) => {
     if (!req.session.user) {
-        return res.status(401).send('Access Denied.');
+        res.status(401).send('Access Denied.');
     }
 
-    return res.status(200).send("username: " + req.session.user.username + 
-    " password: " + req.session.user.password);
+    // return res.status(200).send("username: " + req.session.user.username + 
+    // " password: " + req.session.user.password);
+
+    res.status(200).render('dashboard');
 };
