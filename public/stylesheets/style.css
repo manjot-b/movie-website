@@ -63,6 +63,7 @@ a {
   height: 30px;
 }
 
+/******** MEDIA INFO PAGE *******/
 #trailer {
   clear: both;
   height: 300px;
@@ -105,7 +106,7 @@ a {
   background-color: powderblue;
 }
 
-#extra_desc {
+ul.extra_desc {
   clear: both;
   background-color: sienna;
 }
@@ -113,17 +114,19 @@ a {
 .user_comment_container ul {
   list-style-type: none;
 }
-.comment_info {
+h3.comment_info {
   float: right;
 }
 
-.username_comment {
+h3.username_comment {
   float: left;
 }
 
-.user_comment {
+p.user_comment {
   clear: both;
 }
+
+
 .friendslist ul {
   list-style-type: none;
  
@@ -160,4 +163,33 @@ a {
 .basic_info {
   clear: both;
   text-align: left;
+}
+/******* SEARCH PAGE *******/
+.catalog_searchbar_container {
+  text-align: center;
+  margin-top: 2em;
+}
+
+#catalog_search_box {
+  float: left;
+  width: 70%;
+}
+
+.catalog_search_results {
+  clear: both;
+  text-align: center;
+}
+
+.catalog_search_results table {
+  width: 90%;
+  text-align: center;
+}
+
+.catalog_search_results tr:nth-child(even) {
+  background-color: rgba(240, 0, 0, 0.1)
+}
+
+.catalog_search_results img {
+  width: 37px;
+  height: 55px;
 }

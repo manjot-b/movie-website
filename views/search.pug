@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  div(class="catalog_searchbar_container")
+    form(action="/catalog/search", class="catalog_search", method="POST")
+      input(type="search", name="catalogSearchBox" id="catalog_search_box", placeholder="Search...")
+      input(type="submit", value="Search")
+
+  div(class="catalog_search_results")
+    if(searchResults)
+      table
+        tr
+          th
+          th Title
+          th Year
+          th Rating
+        each result in searchResults
+          tr
+            th
+              img(src="/pictures/posters/movie_poster.jpg", alt="#{results.title} poster") 
+            th 
+              a(href="http://localhost:3000/catalog/movie/" + result.id) #{result.title}
+            #{result.title}
+            th #{result.year}
+            th #{result.rating}

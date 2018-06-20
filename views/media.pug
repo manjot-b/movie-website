@@ -1,12 +1,9 @@
 extends layout
 
 mixin comment(username, comment, rating, date)
-  div(class="username_comment")
-    h3 #{username}   
-  div(class="comment_info")
-    h3 #{rating}   #{date}
-  div(class="user_comment")
-    p #{comment}
+  h3(class="username_comment") #{username}   
+  h3(class="comment_info") #{rating}   #{date}
+  p(class="user_comment") #{comment}
 
 block content
   div(class="media_container")
@@ -29,7 +26,7 @@ block content
       | you are reading this wonderful text boi.
 
 
-    ul(id="extra_desc")
+    ul(class="extra_desc")
       li Year: 2011
       li Director: Christopher Nolan
       li Cast: King Kong, Shrek, Barbie
