@@ -1,11 +1,19 @@
 var user = require('../sessions/user');
 
-//TEST CODE
+//TEST CODE -----------------------------------------
+//test code for recent activities
 var micopost = {username:"Mico", type:"review", movie:"Avengers"};
 var manjotpost = {username:"Manjot", type:"added", movie:"Spider-Man", list:"Movies to watch"};
 var jonapost = {username:"Jona", type:"review", movie:"Riverdale"};
 var activities = [micopost, manjotpost, jonapost];
 
+//test code for friends
+var mico = {name:"Mico", username:"mic0t"};
+var jona = {name:"Jona", username:"jonamik_"};
+var manjot = {name:"Manjot", username:"manjotispogi"};
+var friends = [mico, manjot, jona];
+
+//-----------------------------------------------
 exports.login_post = (req, res) => {
     user.username = req.body.username;
     user.password = req.body.password;
@@ -66,4 +74,28 @@ exports.signup_post = (req, res) => {
         activities: activities, 
         username: user.username 
     })
+};
+
+exports.friends_get = (req, res) => {
+
+    if (!req.session.user) {
+        res.status(401).send('Friends list not available at the moment.');
+    };
+    res.status(200).render('friends', { 
+        username: req.session.user.username, friends: friends
+});
+
+} 
+
+exports.profile_get = (req, res) => {
+
+    if (!req.session.user) {
+        res.status(401).send('Profile not available at the moment.');
+    };
+        
+    res.status(200).render('profile', {
+            activities: activities, 
+            username: req.session.user.username
+    });
+
 };

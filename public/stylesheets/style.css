@@ -108,3 +108,7 @@ a {
 .user_comment {
   clear: both;
 }
+.friendslist ul {
+  list-style-type: none;
+}
+
