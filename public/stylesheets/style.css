@@ -44,3 +44,8 @@ a {
   font-size: 14px;
   line-height: 5em;
 }
+
+.friendslist ul {
+  list-style-type: none;
+}
+

@@ -18,4 +18,8 @@ router.get('/signup', userController.signup_get);
 
 router.post('/signup', userController.signup_post);
 
+router.get('/profile', userController.profile_get);
+
+router.get('/friends', userController.friends_get); 
+
 module.exports = router;

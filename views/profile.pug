@@ -1,0 +1,34 @@
+extends layout 
+
+mixin review_activity(username, movie)
+  .review_activity-wrapper
+    p #[em #{username}] has posted a review on #[em #{movie}]
+
+mixin added_activity(username, movie, movielist)
+  .added_activity-wrapper
+    p #[em #{username}] has added #[em #{movie}] to their media list: #[em #{movielist}]
+
+block content
+    div(id="basic_info")
+        h1 My Profile: #[strong #{username}]
+        img(src="/pictures/profile.png" alt ="Profile Picture" style="width:250px;height:250px;")
+        p Name: 
+        p Email:  
+        p Bio:
+
+    div(class="media_lists")
+        h2 #{username}'s Media List(s)
+
+    div(class="activity")
+        h2 Recent Activity 
+        ul
+            each activity in activities
+                if !activity.list
+                    li 
+                        +review_activity(activity.username, activity.movie)
+                
+                else if activity.list
+                    li
+                        +added_activity(activity.username, activity.movie, activity.list)
+            
+

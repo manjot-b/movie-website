@@ -1,0 +1,18 @@
+extends layout
+mixin friend_mix(friendname)
+    .friends_mix-wrapper
+
+
+
+block content 
+    h1 #{username}'s Friends List
+
+    div(class='friendslist')
+        ul
+            each friend in friends 
+                li
+                    img(src="/pictures/profile.png" alt ="Profile Picture" style="width:50px;height:50px; float:left; padding:10px")
+                    br
+                    p #{friend.name} (#{friend.username})
+
+
