@@ -22,4 +22,8 @@ router.get('/profile', userController.profile_get);
 
 router.get('/friends', userController.friends_get); 
 
+router.get('/my-media', userController.my_media_get);
+
+
+
 module.exports = router;

@@ -2,24 +2,33 @@ extends layout
 
 mixin review_activity(username, movie)
   .review_activity-wrapper
+    img(src='/pictures/speech.png' alt="Thumbs")
     p #[em #{username}] has posted a review on #[em #{movie}]
 
 mixin added_activity(username, movie, movielist)
   .added_activity-wrapper
+    img(src='/pictures/plus.png' alt="Added a movie")
     p #[em #{username}] has added #[em #{movie}] to their media list: #[em #{movielist}]
 
 block content
-    div(id="basic_info")
+
+    div(class='profile_header tab')
         h1 My Profile: #[strong #{username}]
         img(src="/pictures/profile.png" alt ="Profile Picture" style="width:250px;height:250px;")
-        p Name: 
-        p Email:  
-        p Bio:
+        h3 Following: 14     
+        h3 Followers: 16
+
+    div(class="basic_info")
+        
+        br
+        h5 Name: 
+        h5 Email:  
+        h5 Bio:
 
     div(class="media_lists")
         h2 #{username}'s Media List(s)
 
-    div(class="activity")
+    div(class="activity border")
         h2 Recent Activity 
         ul
             each activity in activities

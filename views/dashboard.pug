@@ -2,14 +2,16 @@ extends layout
 
 mixin review_activity(username, movie)
   .review_activity-wrapper
+    img(src='/pictures/speech.png' alt="Thumbs")
     p #[em #{username}] has posted a review on #[em #{movie}]
 
 mixin added_activity(username, movie, movielist)
   .added_activity-wrapper
+    img(src='/pictures/plus.png' alt="Added a movie")
     p #[em #{username}] has added #[em #{movie}] to their media list: #[em #{movielist}]
 
 block content
-  div(class="activity")
+  div(class="activity border")
     h2 Recent Activity 
       ul
         each activity in activities

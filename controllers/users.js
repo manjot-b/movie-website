@@ -13,6 +13,28 @@ var jona = {name:"Jona", username:"jonamik_"};
 var manjot = {name:"Manjot", username:"manjotispogi"};
 var friends = [mico, manjot, jona];
 
+//test code for media lists
+var avengers = {name:"Avengers", year:"2012", type:"Movie", link: null};
+var riverdale = {name:"Riverdale", year:"2017", type:"TV Show", link: null};
+var jane = {name:"Jane the Virgin", year:"2014", type:"TV Show", link: null};
+
+
+var media_list1 = {name:"Love me my soapys", media:[avengers, riverdale, jane]};
+var media_list2 = {name:"I <3 Jane", media:[jane]};
+var media_list = [media_list1, media_list2];
+
+/*for (list in media_list) {
+    for (medialist in list.media) {
+        for (media in medialist.media) {
+            var temp = media.name;
+            var prefix = "http://localhost:3000/catalog/movie/"
+            var ext = temp.replace(/ /g, "-");
+            var newlink = prefix.concat(ext);
+            media.link = newlink;
+
+        }
+    }
+}*/
 //-----------------------------------------------
 exports.login_post = (req, res) => {
     user.username = req.body.username;
@@ -86,6 +108,16 @@ exports.friends_get = (req, res) => {
 });
 
 } 
+
+exports.my_media_get = (req, res) => {
+
+    if (!req.session.user) {
+        res.status(401).send('Media lists not available at the moment.');
+    };
+    res.status(200).render('my_media', { 
+        username: req.session.user.username, media_list: media_list
+});
+}
 
 exports.profile_get = (req, res) => {
 

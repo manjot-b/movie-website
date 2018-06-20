@@ -5,13 +5,15 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     div(class="nav")
+      h1 SceneAddicts
       ul
         a(href="http://localhost:3000/users/dashboard")
           li Home
-        a(href="friends")
+        a(href="http://localhost:3000/users/friends")
           li Friends
         li Search
-        li My Media
-        a(href="profile")
+        a(href="http://localhost:3000/users/my-media")
+          li My Media
+        a(href="http://localhost:3000/users/profile")
           li Profile
     block content

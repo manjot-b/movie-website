@@ -4,6 +4,9 @@ body {
   margin-left: 10%;
   margin-right:10%;
 }
+.nav h1 {
+  text-align: center;
+} 
 
 a {
   color: #00B7FF;
@@ -39,12 +42,25 @@ a {
 }
 .activity ul {
   list-style-type: none;
+  
 }
 
 .activity li {
   
   font-size: 14px;
-  line-height: 5em;
+  padding: 20px;
+
+  
+}
+
+.activity p {
+  display: inline-block;
+  margin-left: 30px;
+}
+.activity img {
+
+  width: 30px;
+  height: 30px;
 }
 
 #trailer {
@@ -110,5 +126,38 @@ a {
 }
 .friendslist ul {
   list-style-type: none;
+ 
+  
+}
+.border li {
+  
+  border-bottom: 2px groove black;
+  font-size: 16px;
+  
 }
 
+
+
+
+.medialist ul {
+  list-style-type: none;
+}
+.profile_header img {
+  float: left;
+}
+
+.profile_header h3 {
+  text-align: right;
+}
+
+.tab h3 { 
+  display:inline-block; 
+  margin-left: 90px; 
+}
+
+
+
+.basic_info {
+  clear: both;
+  text-align: left;
+}

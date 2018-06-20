@@ -1,0 +1,12 @@
+extends layout
+
+block content   
+    h1 My Media Lists
+    div(class="medialist")
+        ul
+            each medlist in media_list
+                li 
+                    h2 #{medlist.name}
+                    each media in medlist.media
+                        a(href="http://localhost:3000/catalog/movie/HOW TO DO")
+                            p #{media.name} (#{media.year})
