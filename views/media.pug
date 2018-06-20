@@ -1,0 +1,44 @@
+extends layout
+
+mixin comment(username, comment, rating, date)
+  div(class="username_comment")
+    h3 #{username}   
+  div(class="comment_info")
+    h3 #{rating}   #{date}
+  div(class="user_comment")
+    p #{comment}
+
+block content
+  div(class="media_container")
+    h1(id="trailer") Movie Trailer
+    h1(id="poster") Poster
+    h1(id="title") #{title}
+    h2(id="add_list") Add to list
+    h2(id="rating") 5.0/7.0   RATE
+    p(id="desc") this is a description for a movie. hope 
+      | you are reading this wonderful text boi.
+      | you are reading this wonderful text boi.
+      | you are reading this wonderful text boi.
+      | you are reading this wonderful text boi.
+      | you are reading this wonderful text boi.
+      | you are reading this wonderful text boi.
+      | you are reading this wonderful text boi.
+      | you are reading this wonderful text boi.
+      | you are reading this wonderful text boi.
+      | you are reading this wonderful text boi.
+      | you are reading this wonderful text boi.
+
+
+    ul(id="extra_desc")
+      li Year: 2011
+      li Director: Christopher Nolan
+      li Cast: King Kong, Shrek, Barbie
+    
+    div(class="user_comment_container")
+      ul
+        li 
+          +comment('toad', 'omg, movie toooooooo gooooood', '10/10', 'Jun, 19, 2018')
+        li
+          +comment('toad', 'omg, movie toooooooo gooooood', '10/10', 'Jun, 19, 2018')
+        li
+          +comment('toad', 'omg, movie toooooooo gooooood', '10/10', 'Jun, 19, 2018')

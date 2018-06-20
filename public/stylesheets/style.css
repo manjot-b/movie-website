@@ -1,6 +1,8 @@
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin-left: 10%;
+  margin-right:10%;
 }
 
 a {
@@ -43,4 +45,66 @@ a {
   
   font-size: 14px;
   line-height: 5em;
+}
+
+#trailer {
+  clear: both;
+  height: 300px;
+  text-align: center;
+  background-color: violet;
+}
+
+#poster {
+  float: left;
+  width: 25%;
+  height: 300px;
+  background-color: turquoise;
+}
+
+#title {
+  float: right;
+  width: 70%;
+  background-color: springgreen;
+}
+
+#rating {
+  float: right;
+  margin: 0px;
+  padding: 0px;
+  width: 35%;
+  background-color: sandybrown;
+}
+
+#add_list {
+  float: right;
+  margin: 0px;
+  padding: 0px;
+  width: 35%;
+  background-color: pink;
+}
+
+#desc {
+  float: right;
+  width: 70%;
+  background-color: powderblue;
+}
+
+#extra_desc {
+  clear: both;
+  background-color: sienna;
+}
+
+.user_comment_container ul {
+  list-style-type: none;
+}
+.comment_info {
+  float: right;
+}
+
+.username_comment {
+  float: left;
+}
+
+.user_comment {
+  clear: both;
 }

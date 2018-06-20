@@ -20,8 +20,9 @@ exports.dashboard_get = (req, res) => {
     }
         
     res.status(200).render('dashboard', {
-            activities: activities, 
-            username: req.session.user.username
+        title: 'Welcome ' + req.session.user.username + '!',    
+        activities: activities, 
+        username: req.session.user.username
     });
 };
 

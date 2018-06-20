@@ -1,12 +1,12 @@
 doctype html
 html
   head
-    title Welcome #{username}!
+    title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     div(class="nav")
       ul
-        a(href="dashboard")
+        a(href="http://localhost:3000/users/dashboard")
           li Home
         li Friends
         li Search
