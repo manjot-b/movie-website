@@ -2,7 +2,7 @@ extends admin_media
 
 block media_content
   div(class="catalog_searchbar_container")
-    form(action="/admin/media/movie/edit", class="catalog_search", method="POST")
+    form(action="/admin/media/edit", class="catalog_search", method="POST")
       input(type="search", name="catalogSearchBox" id="catalog_search_box", placeholder="Search...")
       input(type="submit", value="Search")
 
@@ -30,7 +30,7 @@ block media_content
             th 
               a(href="edit?id=" + result.id) edit
     if(movieData)
-      form(action="/admin/media/movie/edit?id=" + movieData.id, method="POST" class="admin_add_movie")
+      form(action="/admin/media/edit?id=" + movieData.id, method="POST" class="admin_add_movie")
         ul
           div(class="admin_add_movie_content")
             li

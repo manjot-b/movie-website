@@ -6,21 +6,17 @@ exports.media_get = (req, res) => {
         res.status(401).send("You don't have the required privileges");
     }
 
-    res.redirect('/admin/media/movie/add');
+    res.redirect('/admin/media/add');
 };
 
-exports.media_movie_get = (req, res) => {
-    res.redirect('/admin/media/movie/add')
-}
-
-exports.media_movie_add_get = (req, res) => {
+exports.media_add_get = (req, res) => {
     res.render('admin_media_add', {
         title: 'Add Movie',
         isAdmin: req.session.user.isAdmin
     });
 }
 
-exports.media_movie_add_post = (req, res) => {
+exports.media_add_post = (req, res) => {
     var tempMedia = {
         title: req.body.title,
         year: req.body.year,
@@ -28,7 +24,7 @@ exports.media_movie_add_post = (req, res) => {
         director: req.body.director,
         type: req.body.mediaType    // can be 'movie' or 'tv'
     }
-    console.log(tempMovie);
+    
     res.render('admin_media_add', {
         title: 'Add Movie',
         isAdmin: true,
@@ -36,7 +32,7 @@ exports.media_movie_add_post = (req, res) => {
     })
 }
 
-exports.media_movie_edit_get = (req, res) => {
+exports.media_edit_get = (req, res) => {
     if (req.query.search) {
         res.render('admin_media_edit', {
             title: "Search",
@@ -94,7 +90,7 @@ exports.media_movie_edit_get = (req, res) => {
         
 }
 
-exports.media_movie_edit_post = (req, res) => {
+exports.media_edit_post = (req, res) => {
     if(!req.query.id) {   // searching for results if id not defined
         var words = req.body.catalogSearchBox.split(' ');
         var query = "";
@@ -122,7 +118,7 @@ exports.media_movie_edit_post = (req, res) => {
     })
 }
 
-exports.media_movie_delete_post = (req, res) => {
+exports.media_delete_post = (req, res) => {
     if(!req.query.id) {   // searching for results if id not defined
         var words = req.body.catalogSearchBox.split(' ');
         var query = "";
@@ -135,7 +131,7 @@ exports.media_movie_delete_post = (req, res) => {
     }
 }
 
-exports.media_movie_delete_get = (req, res) => {
+exports.media_delete_get = (req, res) => {
     if (req.query.search) { // if searching for some value
         res.render('admin_media_delete', {
             title: "Search",
@@ -188,13 +184,6 @@ exports.media_movie_delete_get = (req, res) => {
 
 exports.media_tvshow_get = (req, res) => {
     res.redirect('/admin/media/tv_show/add')
-}
-
-exports.media_tvshow_add_get = (req, res) => {
-    res.render('admin_tvshow_add', {
-        title: 'Add TV Show',
-        isAdmin: req.session.user.isAdmin
-    });
 }
 
 exports.users_get = (req, res) => {
