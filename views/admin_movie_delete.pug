@@ -1,1 +1,33 @@
 extends admin_movie
+
+block movie_content
+  div(class="catalog_searchbar_container")
+    form(action="/admin/media/movie/delete", class="catalog_search", method="POST")
+      input(type="search", name="catalogSearchBox" id="catalog_search_box", placeholder="Search...")
+      input(type="submit", value="Search")
+
+  div(class="catalog_search_results")
+    if(searchResults)
+      table
+        tr
+          th
+          th ID
+          th Title
+          th Director
+          th Year
+          th Rating
+          th
+        each result in searchResults
+          tr
+            th
+              img(src="/pictures/posters/movie_poster.jpg", alt="#{results.title} poster") 
+            th #{result.id}
+            th 
+              a(href="http://localhost:3000/catalog/movie/" + result.id) #{result.title}
+            th #{result.director}
+            th #{result.year}
+            th #{result.rating}
+            th 
+              a(href="delete?id=" + result.id) delete
+    if(success)
+      p(style="color:green") Deleted successfully

@@ -1,1 +1,26 @@
 extends admin_movie
+
+block movie_content
+    form(action="/admin/media/movie/add", method="POST" class="admin_add_movie")
+        ul
+            div(class="admin_add_movie_content")
+                li
+                    label(for="title") Title
+                    input(type="text", name="title", id="title")
+            div(class="admin_add_movie_content")
+                li
+                    label(for="year") Year
+                    input(type="text", name="year", id="year")
+            div(class="admin_add_movie_content")
+                li
+                    label(for="description") Description
+                    input(type="text", name="description", id="year")
+            div(class="admin_add_movie_content")
+                li
+                    label(for="director") Director
+                    input(type="text", name="director", id="year")
+            div(class="admin_add_movie_content")
+                li
+                    input(type="submit", value="Submit")
+            if (success)
+                li(style="color:green") Added successfully!

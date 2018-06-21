@@ -1,12 +1,51 @@
 extends admin_movie
 
-block media_type_content
-  div(class="admin_movie_nav nav")
-    ul 
-        div(class="admin_movie_nav_content")
-            a(href="/admin/media/movie/add")
-                li Add
-            a(href="/admin/media/movie/edit")
-                li Edit
-            a(href="/admin/media/movie/Delete")
-                li Delete
+block movie_content
+  div(class="catalog_searchbar_container")
+    form(action="/admin/media/movie/edit", class="catalog_search", method="POST")
+      input(type="search", name="catalogSearchBox" id="catalog_search_box", placeholder="Search...")
+      input(type="submit", value="Search")
+
+  div(class="catalog_search_results")
+    if(searchResults)
+      table
+        tr
+          th
+          th ID
+          th Title
+          th Director
+          th Year
+          th Rating
+          th
+        each result in searchResults
+          tr
+            th
+              img(src="/pictures/posters/movie_poster.jpg", alt="#{results.title} poster") 
+            th #{result.id}
+            th 
+              a(href="http://localhost:3000/catalog/movie/" + result.id) #{result.title}
+            th #{result.director}
+            th #{result.year}
+            th #{result.rating}
+            th 
+              a(href="edit?id=" + result.id) edit
+    if(movieData)
+      form(action="/admin/media/movie/edit?id=" + movieData.id, method="POST" class="admin_add_movie")
+        ul
+          div(class="admin_add_movie_content")
+            li
+              label(for="title") Title
+              input(type="text", name="title", id="title", value=movieData.title)
+          div(class="admin_add_movie_content")
+            li
+              label(for="year") Year
+              input(type="text", name="year", id="year", value=movieData.year)
+          div(class="admin_add_movie_content")
+            li
+              label(for="description") Description
+              input(type="text", name="year", id="year", value=movieData.description)
+          div(class="admin_add_movie_content")
+            li
+              input(type="submit", value="Submit")
+          if (success)
+            li(style="color:green") Update successful!

@@ -9,20 +9,22 @@ html
       
       if (isAdmin)
         ul
-          a(href="http://localhost:3000/admin/media" class="admin")
-            li Administer Media
-          a(href="http://localhost:3000/admin/users" class="admin")
-            li Administer Users 
+          div(class="nav_content")
+            a(href="http://localhost:3000/admin/media" class="admin")
+              li Administer Media
+            a(href="http://localhost:3000/admin/users" class="admin")
+              li Administer Users 
       else
         ul
-          a(href="http://localhost:3000/users/dashboard")
-            li Home
-          a(href="http://localhost:3000/users/friends")
-            li Friends
-          a(href="http://localhost:3000/catalog/search")
-            li Search
-          a(href="http://localhost:3000/users/my-media")
-            li My Media
-          a(href="http://localhost:3000/users/profile")
-            li Profile
+          div(class="nav_content")
+            a(href="http://localhost:3000/users/dashboard")
+              li Home
+            a(href="http://localhost:3000/users/friends")
+              li Friends
+            a(href="http://localhost:3000/catalog/search")
+              li Search
+            a(href="http://localhost:3000/users/my-media")
+              li My Media
+            a(href="http://localhost:3000/users/profile")
+              li Profile
     block content

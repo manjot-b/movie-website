@@ -20,17 +20,167 @@ exports.media_movie_add_get = (req, res) => {
     });
 }
 
+exports.media_movie_add_post = (req, res) => {
+    var tempMovie = {
+        title: req.body.title,
+        year: req.body.year,
+        description: req.body.description,
+        director: req.body.director
+    }
+    res.render('admin_movie_add', {
+        title: 'Add Movie',
+        isAdmin: true,
+        success: true
+    })
+}
+
 exports.media_movie_edit_get = (req, res) => {
-    res.render('admin_movie_edit', {
-        title: 'Edit Movie',
-        isAdmin: req.session.user.isAdmin
+    if (req.query.search) {
+        res.render('admin_movie_edit', {
+            title: "Search",
+            isAdmin: req.session.user.isAdmin,
+
+            // example data
+            searchResults: [{
+                title: 'Spiderman',
+                year: 2017,
+                rating: 10,
+                id: 'asj12321'
+            },
+            {
+                title: 'Hulk',
+                year: 2017,
+                rating: 10,
+                id: 'asj12321'
+            },
+            {
+                title: 'Friends',
+                year: 2017,
+                rating: 8,
+                id: 'asj12321'
+            },
+            {
+                title: 'Game of Thrones',
+                year: 2010,
+                rating: 9.7,
+                id: 'asj12321'
+            }
+        ]
+        });
+    }
+
+    var tempMovie = {
+        title: 'Spiderman',
+        year: 2017,
+        description: 'Local spider swings from webs',
+        id: 'asj12321'
+    };
+
+    if (req.query.id) { // editing a specific movie
+        res.render('admin_movie_edit', {
+            title: "Edit",
+            isAdmin: true,
+            movieData: tempMovie
+        })
+    }
+
+    // not searching and not editing a movie
+    res.render('admin_movie_edit', { 
+        title: "Search",
+        isAdmin: true 
     });
+        
+}
+
+exports.media_movie_edit_post = (req, res) => {
+    if(!req.query.id) {   // searching for results if id not defined
+        var words = req.body.catalogSearchBox.split(' ');
+        var query = "";
+
+        words.forEach(word => {
+            query += word + '+';
+        });
+
+        res.redirect('?search=' + query)
+    }
+    
+    
+    // else editing a specific movie    
+    var tempMovie = {
+        title: 'Spiderman',
+        year: 2017,
+        description: 'Local spider swings from webs',
+        id: 'asj12321'
+    };
+    res.render('admin_movie_edit', {
+        title: "Edit",
+        isAdmin: true,
+        movieData: tempMovie,
+        success: true
+    })
+}
+
+exports.media_movie_delete_post = (req, res) => {
+    if(!req.query.id) {   // searching for results if id not defined
+        var words = req.body.catalogSearchBox.split(' ');
+        var query = "";
+
+        words.forEach(word => {
+            query += word + '+';
+        });
+
+        res.redirect('?search=' + query)
+    }
 }
 
 exports.media_movie_delete_get = (req, res) => {
+    if (req.query.search) { // if searching for some value
+        res.render('admin_movie_delete', {
+            title: "Search",
+            isAdmin: req.session.user.isAdmin,
+
+            // example data
+            searchResults: [{
+                title: 'Spiderman',
+                year: 2017,
+                rating: 10,
+                id: 'asj12321'
+            },
+            {
+                title: 'Hulk',
+                year: 2017,
+                rating: 10,
+                id: 'asj12321'
+            },
+            {
+                title: 'Friends',
+                year: 2017,
+                rating: 8,
+                id: 'asj12321'
+            },
+            {
+                title: 'Game of Thrones',
+                year: 2010,
+                rating: 9.7,
+                id: 'asj12321'
+            }
+        ]
+        });
+    }
+    
+    if (req.query.id) { // if deleting some movie
+                        // might be easier to just say the movie was deleted
+                        // instead of displaying updated movies
+        res.render('admin_movie_delete', {
+            title: "Search",
+            isAdmin: req.session.user.isAdmin,
+            success: true
+        });
+    }
+
     res.render('admin_movie_delete', {
         title: 'Delete Movie',
-        isAdmin: req.session.user.isAdmin
+        isAdmin: true
     });
 }
 
