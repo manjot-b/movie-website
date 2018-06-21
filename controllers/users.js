@@ -41,6 +41,11 @@ exports.login_post = (req, res) => {
     user.password = req.body.password;
 
     req.session.user = user;
+    if (req.session.user.username == 'admin') {
+        req.session.user.isAdmin = true;
+        res.redirect('/admin/media');
+    }
+
     res.redirect('/users/dashboard');
 };
 
@@ -48,9 +53,10 @@ exports.dashboard_get = (req, res) => {
     if (!req.session.user) {
         res.status(401).send('Access Denied.');
     }
-        
+
     res.status(200).render('dashboard', {
         title: 'Welcome ' + req.session.user.username + '!',    
+        isAdmin: req.session.user.isAdmin,
         activities: activities, 
         username: req.session.user.username
     });

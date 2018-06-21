@@ -36,6 +36,10 @@ a {
   color: white;
 }
 
+.nav .admin li {
+  width: 50%;
+}
+
 .error_msg ul {
   list-style-type: none;
   color: #cf0000;
