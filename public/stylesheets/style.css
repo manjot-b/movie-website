@@ -45,6 +45,32 @@ a {
   width: 49%;
 }
 
+.admin_movie_nav {
+  float: right;
+  width: 90%;
+}
+
+.admin_movie_nav li {
+  background-color: #aaa;
+  width: 30%;
+}
+
+.admin_movie_nav_content {
+  text-align: center;
+}
+
+.media_type_nav ul {
+  list-style-type: none;
+  float: left;
+  padding: 0;
+  width: 5%;
+  margin: 0 5px;
+}
+
+.media_type_nav li {
+  margin-bottom: 5px;
+}
+
 .error_msg ul {
   list-style-type: none;
   color: #cf0000;
