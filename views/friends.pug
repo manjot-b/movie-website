@@ -8,21 +8,28 @@ block content
 
     div(class="catalog_search_results")
         if(searchUserResults)
+            h2 You searched for: "#{search}"
             table
                 tr
                     th
-                    th Title
-                    th Year
-                    th Rating
+                    th Name
+                    th Last Name
+                    th User Name
+                    th Option
                 each result in searchUserResults
                     tr
                         th
                             img(src="/pictures/posters/movie_poster.jpg", alt="#{results.title} poster") 
                         th 
-                            a(href="http://localhost:3000/catalog/movie/" + result.id) #{result.title}
-                        #{result.title}
-                        th #{result.year}
-                        th #{result.rating}
+                            a(href="http://localhost:3000/users/profile") #{result.first_name}
+                            #{result.first_name}
+                        th #{result.last_name}
+                        th #{result.username}
+                        th
+                            form(action="/users/search", class="catalog_search", method="POST")
+                                input(type="submit", value="+ Friend")
+
+
             
 
     
@@ -30,7 +37,7 @@ block content
         if(!searchUserResults)
             h1 Add a Friend
             form(action="/users/search", class="catalog_search", method="POST")
-                input(type="search1", name="userSearchBox" id="catalog_search_box", placeholder="Search for a user...")
+                input(type="search1", name="userSearchBox" id="catalog_search_box", placeholder="Search for a new friend...")
                 input(type="submit", value="Search")
 
         
@@ -43,7 +50,12 @@ block content
                         li
                             img(src="/pictures/profile.png" alt ="Profile Picture" style="width:75px;height:75px; float:left; padding:10px")
                             br
-                            p #{friend.name} 
+                            
+                            form(action="/users/friends", class="remove_friend_button", method="POST")
+                                label #{friend.name}
+                                input(type="submit", value="Remove")
+                                input(name="frienduser", type="hidden", value=friend.username)
+
                                 a(href='http://localhost:3000/users/profile')
                                     p (#{friend.username})
       
