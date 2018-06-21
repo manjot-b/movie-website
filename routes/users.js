@@ -24,6 +24,12 @@ router.get('/friends', userController.friends_get);
 
 router.get('/my-media', userController.my_media_get);
 
+router.get('/search', userController.search_get);
+
+router.post('/search', userController.search_post);
+
+
+
 
 
 module.exports = router;

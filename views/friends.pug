@@ -6,15 +6,46 @@ mixin friend_mix(friendname)
 
 block content 
 
+    div(class="catalog_search_results")
+        if(searchUserResults)
+            table
+                tr
+                    th
+                    th Title
+                    th Year
+                    th Rating
+                each result in searchUserResults
+                    tr
+                        th
+                            img(src="/pictures/posters/movie_poster.jpg", alt="#{results.title} poster") 
+                        th 
+                            a(href="http://localhost:3000/catalog/movie/" + result.id) #{result.title}
+                        #{result.title}
+                        th #{result.year}
+                        th #{result.rating}
+            
+
+    
+    div(class="catalog_searchbar_container")
+        if(!searchUserResults)
+            h1 Add a Friend
+            form(action="/users/search", class="catalog_search", method="POST")
+                input(type="search1", name="userSearchBox" id="catalog_search_box", placeholder="Search for a user...")
+                input(type="submit", value="Search")
+
+        
+      
     div(class='friendslist border')
-        h1 #{username}'s Friends List
-        ul
-            each friend in friends 
-                li
-                    img(src="/pictures/profile.png" alt ="Profile Picture" style="width:75px;height:75px; float:left; padding:10px")
-                    br
-                    p #{friend.name} 
-                        a(href='http://localhost:3000/users/profile')
-                            p (#{friend.username})
-
-
+        if(!searchUserResults)
+            h1 #{username}'s Friends List
+                ul
+                    each friend in friends 
+                        li
+                            img(src="/pictures/profile.png" alt ="Profile Picture" style="width:75px;height:75px; float:left; padding:10px")
+                            br
+                            p #{friend.name} 
+                                a(href='http://localhost:3000/users/profile')
+                                    p (#{friend.username})
+      
+        
+    

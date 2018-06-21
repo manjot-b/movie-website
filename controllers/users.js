@@ -109,6 +109,53 @@ exports.friends_get = (req, res) => {
 
 } 
 
+exports.search_post = (req, res) => {
+    var words = req.body.userSearchBox.split(' ');
+    var query = "";
+
+    words.forEach(word => {
+        query += word + '+';
+    });
+
+    res.redirect('search?search1=' + query)
+}
+
+exports.search_get = (req, res) => {
+    if (!req.query.search1) {    // not seaching for something
+        res.render('friends', { title: "Search111", friends: friends });
+    }
+
+    res.render('friends', {
+        title: "Search",
+        // example data
+        searchUserResults: [{
+            title: 'Spiderman',
+            year: 2017,
+            rating: 10,
+            id: 'asj12321'
+        },
+        {
+            title: 'Hulk',
+            year: 2017,
+            rating: 10,
+            id: 'asj12321'
+        },
+        {
+            title: 'Friends',
+            year: 2017,
+            rating: 8,
+            id: 'asj12321'
+        },
+        {
+            title: 'Game of Thrones',
+            year: 2010,
+            rating: 9.7,
+            id: 'asj12321'
+        }
+        ], friends: friends
+    });
+}
+
 exports.my_media_get = (req, res) => {
 
     if (!req.session.user) {
