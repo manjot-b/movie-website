@@ -94,6 +94,12 @@ a {
   width: 60%;
 }
 
+.admin_add_movie select {
+  float: right;
+  clear: right;
+  width: 60%;
+}
+
 /** SIGN UP PAGE ***/
 .error_msg ul {
   list-style-type: none;

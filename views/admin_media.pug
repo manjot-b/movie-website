@@ -1,10 +1,14 @@
 extends layout
 
 block content
-  div(class="media_type_nav")
-    ul
-      a(href="/admin/media/movie") 
-        li Movie
-      a(href="/admin/media/tv_show") 
-        li TV Show
-  block media_nav
+  div(class="admin_movie_container")
+        div(class="admin_movie_nav nav")
+            ul 
+                div(class="admin_movie_nav_content")
+                    a(href="/admin/media/movie/add")
+                        li Add
+                    a(href="/admin/media/movie/edit")
+                        li Edit
+                    a(href="/admin/media/movie/delete")
+                        li Delete
+        block media_content

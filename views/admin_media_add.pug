@@ -1,8 +1,14 @@
-extends admin_movie
+extends admin_media
 
-block movie_content
+block media_content
     form(action="/admin/media/movie/add", method="POST" class="admin_add_movie")
         ul
+            div(class="admin_add_movie_content")
+                li
+                    label(for="mediaType") Type
+                    select(name="mediaType", id="type")
+                        option(value="movie") Movie
+                        option(value="tv") TV Show
             div(class="admin_add_movie_content")
                 li
                     label(for="title") Title
@@ -17,7 +23,7 @@ block movie_content
                     input(type="text", name="description", id="year")
             div(class="admin_add_movie_content")
                 li
-                    label(for="director") Director
+                    label(for="director") Director/Creator
                     input(type="text", name="director", id="year")
             div(class="admin_add_movie_content")
                 li

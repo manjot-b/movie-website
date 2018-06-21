@@ -14,20 +14,22 @@ exports.media_movie_get = (req, res) => {
 }
 
 exports.media_movie_add_get = (req, res) => {
-    res.render('admin_movie_add', {
+    res.render('admin_media_add', {
         title: 'Add Movie',
         isAdmin: req.session.user.isAdmin
     });
 }
 
 exports.media_movie_add_post = (req, res) => {
-    var tempMovie = {
+    var tempMedia = {
         title: req.body.title,
         year: req.body.year,
         description: req.body.description,
-        director: req.body.director
+        director: req.body.director,
+        type: req.body.mediaType    // can be 'movie' or 'tv'
     }
-    res.render('admin_movie_add', {
+    console.log(tempMovie);
+    res.render('admin_media_add', {
         title: 'Add Movie',
         isAdmin: true,
         success: true
@@ -36,7 +38,7 @@ exports.media_movie_add_post = (req, res) => {
 
 exports.media_movie_edit_get = (req, res) => {
     if (req.query.search) {
-        res.render('admin_movie_edit', {
+        res.render('admin_media_edit', {
             title: "Search",
             isAdmin: req.session.user.isAdmin,
 
@@ -77,7 +79,7 @@ exports.media_movie_edit_get = (req, res) => {
     };
 
     if (req.query.id) { // editing a specific movie
-        res.render('admin_movie_edit', {
+        res.render('admin_media_edit', {
             title: "Edit",
             isAdmin: true,
             movieData: tempMovie
@@ -85,7 +87,7 @@ exports.media_movie_edit_get = (req, res) => {
     }
 
     // not searching and not editing a movie
-    res.render('admin_movie_edit', { 
+    res.render('admin_media_edit', { 
         title: "Search",
         isAdmin: true 
     });
@@ -112,7 +114,7 @@ exports.media_movie_edit_post = (req, res) => {
         description: 'Local spider swings from webs',
         id: 'asj12321'
     };
-    res.render('admin_movie_edit', {
+    res.render('admin_media_edit', {
         title: "Edit",
         isAdmin: true,
         movieData: tempMovie,
@@ -135,7 +137,7 @@ exports.media_movie_delete_post = (req, res) => {
 
 exports.media_movie_delete_get = (req, res) => {
     if (req.query.search) { // if searching for some value
-        res.render('admin_movie_delete', {
+        res.render('admin_media_delete', {
             title: "Search",
             isAdmin: req.session.user.isAdmin,
 
@@ -171,14 +173,14 @@ exports.media_movie_delete_get = (req, res) => {
     if (req.query.id) { // if deleting some movie
                         // might be easier to just say the movie was deleted
                         // instead of displaying updated movies
-        res.render('admin_movie_delete', {
+        res.render('admin_media_delete', {
             title: "Search",
             isAdmin: req.session.user.isAdmin,
             success: true
         });
     }
 
-    res.render('admin_movie_delete', {
+    res.render('admin_media_delete', {
         title: 'Delete Movie',
         isAdmin: true
     });

@@ -1,6 +1,6 @@
-extends admin_movie
+extends admin_media
 
-block movie_content
+block media_content
   div(class="catalog_searchbar_container")
     form(action="/admin/media/movie/edit", class="catalog_search", method="POST")
       input(type="search", name="catalogSearchBox" id="catalog_search_box", placeholder="Search...")
