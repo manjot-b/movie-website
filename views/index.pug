@@ -17,3 +17,7 @@ html
         input(type="submit", value="Log In")
         br
         a(href="/users/signup") Sign Up
+      if(error)
+        div(class="error_msg")
+            ul
+              li #{error}

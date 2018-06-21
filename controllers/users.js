@@ -1,5 +1,6 @@
+var Sequelize = require('../sequelize/sequelize.js');
 var user = require('../sessions/user');
-
+var async = require('async');
 //TEST CODE -----------------------------------------
 //test code for recent activities
 var micopost = {username:"Mico", type:"review", movie:"Avengers"};
@@ -14,9 +15,9 @@ var manjot = {name:"Manjot", username:"manjotispogi"};
 var friends = [mico, manjot, jona];
 
 //test code for media lists
-var avengers = {name:"Avengers", year:"2012", type:"Movie", link: null};
-var riverdale = {name:"Riverdale", year:"2017", type:"TV Show", link: null};
-var jane = {name:"Jane the Virgin", year:"2014", type:"TV Show", link: null};
+var avengers = {name:"Avengers", year:"2012", type:"Movie", description: null};
+var riverdale = {name:"Riverdale", year:"2017", type:"TV Show", description: null};
+var jane = {name:"Jane the Virgin", year:"20140", type:"TV Show", description: null};
 
 
 var media_list1 = {name:"Love me my soapys", media:[avengers, riverdale, jane]};
@@ -37,11 +38,27 @@ var media_list = [media_list1, media_list2];
 }*/
 //-----------------------------------------------
 exports.login_post = (req, res) => {
-    user.username = req.body.username;
-    user.password = req.body.password;
-
-    req.session.user = user;
-    res.redirect('/users/dashboard');
+    Sequelize.query('SELECT * FROM (people INNER JOIN users ON username = users_username)' + 
+    'WHERE username = :username AND password = :password', {
+        type:Sequelize.QueryTypes.SELECT,
+        replacements: {
+            username: req.body.username,
+            password: req.body.password
+        }
+    }).then(
+        rows => {
+            console.log(rows);
+            if(rows.length == 0) {
+                res.render('index', {
+                    error: 'That username or password doesn\'t exist'
+                })
+            }
+            user.username = req.body.username;
+            user.password = req.body.password;
+            req.session.user = user;
+            res.redirect('/users/dashboard');
+        }
+    );
 };
 
 exports.dashboard_get = (req, res) => {
@@ -84,40 +101,152 @@ exports.signup_post = (req, res) => {
         errors.push("Enter in password");
     }
 
-    if (errors.length > 0) {
-        res.render('signup', { errors: errors });
-    }
+    Sequelize.query('SELECT * FROM (people INNER JOIN users ON username = users_username)' + 
+    'WHERE username = :username OR email = :email', {
+        type:Sequelize.QueryTypes.SELECT,
+        replacements: {
+            username: req.body.username,
+            email: req.body.email
+        }
+    }).then(
+        rows => {
+            console.log(rows);
+            if(rows.length > 0) {
+                console.log(rows.length);
+                errors.push('That username or email already exists');
+                res.render('signup', { errors: errors });
+                return;
+            }
+            user.username = req.body.username;
+            user.email = req.body.email;
+            req.session.user = user;
+            Sequelize.query('INSERT INTO people ' +
+            'VALUES(:username, :email, :password, :first_name, :last_name)', {
+                type:Sequelize.QueryTypes.INSERT,
+                 replacements: {
+                    username: req.body.username,
+                    email: req.body.email,
+                    password: req.body.password,
+                    first_name: req.body.firstName,
+                    last_name: req.body.lastName
+                 }
+            }).then(
+                () => {
+                    Sequelize.query('INSERT INTO users ' +
+                    'VALUES(:username)', {
+                    type:Sequelize.QueryTypes.INSERT,
+                    replacements: {
+                        username: req.body.username,
+                    }
+                })
+                    res.redirect('/users/dashboard');
+                }
+            )
+        }
+    )
 
-    user.username = req.body.username;
-    user.password = req.body.password;
+    // if (errors.length > 0) {
+    //     res.render('signup', { errors: errors });
+    // }
 
-    req.session.user = user;
-    res.render('dashboard', { 
-        activities: activities, 
-        username: user.username 
-    })
+    // user.username = req.body.username;
+    // user.password = req.body.password;
+
+    // req.session.user = user;
+    // res.render('dashboard', { 
+    //     activities: activities, 
+    //     username: user.username 
+    // })
 };
 
 exports.friends_get = (req, res) => {
-
     if (!req.session.user) {
         res.status(401).send('Friends list not available at the moment.');
     };
-    res.status(200).render('friends', { 
-        username: req.session.user.username, friends: friends
-});
 
-} 
+    Sequelize.query('SELECT first_name, last_name, username FROM (people INNER JOIN (SELECT user2_username FROM friends_with ' + 
+    'WHERE user1_username = :username) AS nest ON username = nest.user2_username)', {
+        type:Sequelize.QueryTypes.SELECT,
+        replacements: {
+            username: req.session.user.username,
+        }
+    }).then(
+        rows => {
+            console.log(rows);
+        friends = [];
+        rows.forEach(row =>{
+            friends.push(
+                {name: row.first_name + ' ' + row.last_name, 
+                username: row.username }
+            )
+        })
+        res.status(200).render('friends', { 
+            username: req.session.user.username, friends: friends
+        })
+    })
+   
+}; 
 
 exports.my_media_get = (req, res) => {
+    var nameOfList = [];
+    media_list = [];
+    // var mediaList = [];
 
     if (!req.session.user) {
         res.status(401).send('Media lists not available at the moment.');
     };
-    res.status(200).render('my_media', { 
-        username: req.session.user.username, media_list: media_list
-});
-}
+
+    Sequelize.query('SELECT name FROM media_list WHERE user_username = :username',{
+        type:Sequelize.QueryTypes.SELECT,
+        replacements: {
+            username: req.session.user.username,
+        }
+    }).then(
+        rows => {
+            //console.log(rows);
+            async.each(rows, (row, callback) => {
+                console.log(row.name);
+                var mediaList = {
+                    name: row.name, 
+                    media: []
+                };
+                Sequelize.query('SELECT name, year FROM media AS m, ' + 
+                    '(SELECT list_media_id FROM contains ' +
+                    'WHERE list_username = :username AND list_name = :listname) AS main ' +
+                    'WHERE m.id = main.list_media_id;', {
+                        type:Sequelize.QueryTypes.SELECT,
+                        replacements: {
+                            username: req.session.user.username,
+                            listname: row.name,
+                        }
+                    }).then(rows1 => {
+                            //console.log(rows1);
+                                rows1.forEach(row1 =>{
+                                    mediaList.media.push(
+                                        {
+                                            name: row1.name, 
+                                            year: row1.year }
+                                )
+                            }
+                            )
+                            media_list.push(mediaList);
+                            console.log(mediaList);
+                    
+                            callback();
+                        }
+                    )
+                
+            },
+            err => {
+                console.log('done');
+                console.log(media_list);
+                res.status(200).render('my_media', { 
+                    username: req.session.user.username, media_list: media_list
+                })
+            }
+            )
+        })
+};
 
 exports.profile_get = (req, res) => {
 
