@@ -23,7 +23,7 @@ block media_content
               img(src="/pictures/posters/movie_poster.jpg", alt="#{results.title} poster") 
             th #{result.id}
             th 
-              a(href="http://localhost:3000/catalog/movie/" + result.id) #{result.title}
+              a(href="http://localhost:3000/catalog/" + result.id) #{result.title}
             th #{result.director}
             th #{result.year}
             th #{result.rating}
