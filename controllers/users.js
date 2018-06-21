@@ -187,6 +187,58 @@ exports.friends_get = (req, res) => {
    
 }; 
 
+
+exports.friends_post = (req, res) => {
+    console.log(req.body.frienduser);
+    if (mico.username === req.body.frienduser) {
+        console.log('hello');
+    }
+    res.render('friends', {username: req.session.user.username, friends: friends
+});
+
+}
+
+
+exports.search_post = (req, res) => {
+    var words = req.body.userSearchBox.split(' ');
+    var query = "";
+
+    words.forEach(word => {
+        query += word + '+';
+    });
+
+    res.redirect('search?search1=' + query)
+}
+
+exports.search_get = (req, res) => {
+    if (!req.query.search1) {    // not seaching for something
+        res.render('friends', { title: "Search111", friends: friends });
+    }
+
+    res.render('friends', {
+        title: "Search",
+        // example data
+        searchUserResults: [{
+            first_name: 'Mico',
+            last_name: 'Tran',
+            username: mico.username,
+            id: 'asj12321'
+        },
+        {
+            first_name: 'Jona',
+            last_name: 'Grageda',
+            username: jona.username,
+            id: 'asj12321'
+        },
+        {
+            first_name: 'Manjot',
+            last_name: 'Bal',
+            username: manjot.username,
+            id: 'asj12321'
+        }], search: req.query.search1
+    });
+}
+
 exports.my_media_get = (req, res) => {
     var nameOfList = [];
     media_list = [];
@@ -248,15 +300,81 @@ exports.my_media_get = (req, res) => {
         })
 };
 
-exports.profile_get = (req, res) => {
+exports.my_media_post = (req, res) => {
+    console.log(req.body.new_list_name);
 
+    //adding a media list and displaying it on page 
+    if (typeof req.body.new_list_name != "undefined")
+    {
+        var newList = {name:req.body.new_list_name, media:[avengers, jane]}
+        media_list.push(newList);
+    };
+
+    //removing a media list
+    if (typeof req.body.removedList != "undefined")
+    {
+        console.log("Success, removed list: "+ req.body.removedList);
+    };
+
+    //delete media from list here
+    //use req.body.remMed_list for media list of removed media
+    //use req.body.removedMedia for media to be removed 
+
+
+    res.render('my_media', { 
+        username: req.session.user.username, media_list: media_list
+});
+}
+
+exports.profile_get = (req, res) => {
+    errors = [];
     if (!req.session.user) {
         res.status(401).send('Profile not available at the moment.');
     };
         
     res.status(200).render('profile', {
             activities: activities, 
-            username: req.session.user.username
+            username: req.session.user.username,
+            media_list
     });
 
 };
+
+exports.profile_post = (req, res) => {
+
+    errors = [];
+
+    if (!req.body.firstName.length < 1) {
+        errors.push("Update first name");
+    }
+    if (!req.body.lastName.length < 1) {
+        errors.push("Update in last name");
+    }
+    if (!req.body.email.length < 1) {
+        errors.push("Email not valid or unique");
+    }
+    if (!req.body.password.length < 1) {
+        errors.push("Update password");
+    }
+
+    if (errors.length > 0) {
+        res.render('edit_profile', { errors: errors });
+    }
+        
+    res.status(200).render('profile', {
+            activities: activities, 
+            username: req.session.user.username,
+            media_list
+    });
+
+};
+
+exports.editprofile_post = (req, res) => {
+    res.render('edit_profile')
+};
+
+exports.editprofile_get = (req, res) => {
+    res.render('edit_profile')
+    
+};
+

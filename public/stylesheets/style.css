@@ -139,23 +139,37 @@ p.user_comment {
   
 }
 
+.medialist a {
 
-
+  font-size: 18px;
+}
 
 .medialist ul {
   list-style-type: none;
 }
+
+
 .profile_header img {
   float: left;
+}
+
+.profile_header input {
+  position: relative;
+  left: 80px;
+}
+
+.profile_header ul {
+  list-style-type: none;
 }
 
 .profile_header h3 {
   text-align: right;
 }
 
-.tab h3 { 
+.tab h3  { 
   display:inline-block; 
-  margin-left: 90px; 
+  margin-left: 90px;
+  
 }
 
 
@@ -164,6 +178,11 @@ p.user_comment {
   clear: both;
   text-align: left;
 }
+  
+.basic_info ul {
+  list-style-type: none;
+}
+
 /******* SEARCH PAGE *******/
 .catalog_searchbar_container {
   text-align: center;
