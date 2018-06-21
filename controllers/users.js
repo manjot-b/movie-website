@@ -46,6 +46,7 @@ exports.login_post = (req, res) => {
         res.redirect('/admin/media');
     }
 
+    req.session.user.isAdmin = false;
     res.redirect('/users/dashboard');
 };
 

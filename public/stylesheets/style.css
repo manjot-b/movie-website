@@ -23,21 +23,26 @@ a {
 
 .nav ul {
   list-style-type: none;
-  margin: 0;
   padding: 0;
-  background-color: #000010;
 }
 
 .nav li {
+  background-color: #000010;
   display: inline-block;
-  width: 20%;
+  width: 19.5%;
   text-align: center;
   font: 20px;
   color: white;
+  border-left: 1px solid white;
+  margin-left: 0.4em;
+}
+
+.nav li:hover {
+  background-color: #333
 }
 
 .nav .admin li {
-  width: 50%;
+  width: 49%;
 }
 
 .error_msg ul {
