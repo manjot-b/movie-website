@@ -13,20 +13,36 @@ mixin added_activity(username, movie, movielist)
 block content
 
     div(class='profile_header tab')
-        h1 My Profile: #[strong #{username}]
-        img(src="/pictures/profile.png" alt ="Profile Picture" style="width:250px;height:250px;")
-        h3 Following: 14     
-        h3 Followers: 16
+        ul
+            li
+                h1 My Profile: #[strong #{username}]
+            li
+                img(src="/pictures/profile.png" alt ="Profile Picture" style="width:250px;height:250px;")
+            li
+                h3 Friends: 14     
+            li
+
+                form(action="/users/editprofile", class="edit_profile_button", method="POST")
+                    input(type="submit", value="Edit Profile")
+
+   
 
     div(class="basic_info")
-        
         br
-        h5 Name: 
-        h5 Email:  
-        h5 Bio:
+        ul
+            li
+                h5 Name: 
+            li
+                h5 Email:  
+            li  
+                h5 Bio:
 
-    div(class="media_lists")
+    div(class="medialist")
         h2 #{username}'s Media List(s)
+        ul
+            each media in media_list
+                li
+                    p #[em #{media.name}]
 
     div(class="activity border")
         h2 Recent Activity 
