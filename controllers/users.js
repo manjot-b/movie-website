@@ -224,43 +224,76 @@ exports.friends_post = (req, res) => {
 
 
 exports.search_post = (req, res) => {
-    var words = req.body.userSearchBox.split(' ');
-    var query = "";
+    if (typeof req.body.userSearchBox != 'undefined') {
+        var words = req.body.userSearchBox.split(' ');
+        var query = "";
+    
+        for(var i=0; i<words.length; i++) {
+            if (i == words.length - 1) {
+                query += words;
+                break; 
+            }
+            query += words + '+';
+        }
+        // words.forEach(word => {
+        //     query += word + '+';
+        // });
+    
+        res.redirect('search?search1=' + query);    
+    }
 
-    words.forEach(word => {
-        query += word + '+';
-    });
-
-    res.redirect('search?search1=' + query)
+    // req.body.new_friend_username
+    
 }
 
 exports.search_get = (req, res) => {
     if (!req.query.search1) {    // not seaching for something
         res.render('friends', { title: "Search111", friends: friends });
     }
-
-    res.render('friends', {
-        title: "Search",
-        // example data
-        searchUserResults: [{
-            first_name: 'Mico',
-            last_name: 'Tran',
-            username: mico.username,
-            id: 'asj12321'
-        },
-        {
-            first_name: 'Jona',
-            last_name: 'Grageda',
-            username: jona.username,
-            id: 'asj12321'
-        },
-        {
-            first_name: 'Manjot',
-            last_name: 'Bal',
-            username: manjot.username,
-            id: 'asj12321'
-        }], search: req.query.search1
-    });
+    Sequelize.query("SELECT * FROM (people INNER JOIN users ON username = users_username) " +
+        "WHERE (username LIKE :search_term OR last_name LIKE :search_term OR first_name LIKE :search_term) " + 
+        "AND (username NOT IN (SELECT T.user2_username FROM (people INNER JOIN " + 
+        "(SELECT * FROM friends_with WHERE user1_username = :logged_in_user) AS T ON username = user2_username)))" , {
+            type:Sequelize.QueryTypes.SELECT,
+            replacements: {
+            search_term: "%" + req.query.search1 + "%",
+            logged_in_user: req.session.user.username
+        }
+        }).then(rows=> {
+            console.log(rows);
+            results = [];
+            rows.forEach(row => {
+                var user = {
+                    first_name: row.first_name,
+                    last_name: row.last_name,
+                    username: row.users_username,
+                }
+                results.push(user);
+            });
+            res.render('friends', {title: "Search", searchUserResults: results});
+        });
+    // res.render('friends', {
+    //     title: "Search",
+    //     // example data
+    //     searchUserResults: [{
+    //         first_name: 'Mico',
+    //         last_name: 'Tran',
+    //         username: mico.username,
+    //         id: 'asj12321'
+    //     },
+    //     {
+    //         first_name: 'Jona',
+    //         last_name: 'Grageda',
+    //         username: jona.username,
+    //         id: 'asj12321'
+    //     },
+    //     {
+    //         first_name: 'Manjot',
+    //         last_name: 'Bal',
+    //         username: manjot.username,
+    //         id: 'asj12321'
+    //     }], search: req.query.search1
+    // });
 }
 
 exports.my_media_get = (req, res) => {
