@@ -21,7 +21,7 @@ block content
                         
                         form(action="/users/my-media", class="edit_profile_button", method="POST")
                             input(type="submit", value="Remove Media")
-                            input(name="removedMedia", type="hidden", value=media.name)
-                            input(name="remMedia_list", type="hidden", value=medlist)
+                            input(name="removedMedia", type="hidden", value=media.id)
+                            input(name="remMedia_list", type="hidden", value=medlist.name)
                         br
 

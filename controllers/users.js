@@ -15,9 +15,9 @@ var manjot = {name:"Manjot", username:"manjotispogi"};
 var friends = [mico, manjot, jona];
 
 //test code for media lists
-var avengers = {name:"Avengers", year:"2012", type:"Movie", description: null};
-var riverdale = {name:"Riverdale", year:"2017", type:"TV Show", description: null};
-var jane = {name:"Jane the Virgin", year:"20140", type:"TV Show", description: null};
+var avengers = {name:"Avengers", year:"2012", type:"Movie", id: 1};
+var riverdale = {name:"Riverdale", year:"2017", type:"TV Show", id: 2};
+var jane = {name:"Jane the Virgin", year:"20140", type:"TV Show", id: 3};
 
 
 var media_list1 = {name:"Love me my soapys", media:[avengers, riverdale, jane]};
@@ -297,9 +297,7 @@ exports.search_get = (req, res) => {
 }
 
 exports.my_media_get = (req, res) => {
-    var nameOfList = [];
     media_list = [];
-    // var mediaList = [];
 
     if (!req.session.user) {
         res.status(401).send('Media lists not available at the moment.');
@@ -319,7 +317,7 @@ exports.my_media_get = (req, res) => {
                     name: row.name, 
                     media: []
                 };
-                Sequelize.query('SELECT name, year FROM media AS m, ' + 
+                Sequelize.query('SELECT name, year, id FROM media AS m, ' + 
                     '(SELECT list_media_id FROM contains ' +
                     'WHERE list_username = :username AND list_name = :listname) AS main ' +
                     'WHERE m.id = main.list_media_id;', {
@@ -334,7 +332,8 @@ exports.my_media_get = (req, res) => {
                                     mediaList.media.push(
                                         {
                                             name: row1.name, 
-                                            year: row1.year }
+                                            year: row1.year,
+                                            id: row1.id }
                                 )
                             }
                             )
@@ -363,24 +362,56 @@ exports.my_media_post = (req, res) => {
     //adding a media list and displaying it on page 
     if (typeof req.body.new_list_name != "undefined")
     {
-        var newList = {name:req.body.new_list_name, media:[avengers, jane]}
+        var newList = {name:req.body.new_list_name, media:[]}
         media_list.push(newList);
+        Sequelize.query('INSERT INTO media_list VALUES (:title, :username, null)' , {
+            type:Sequelize.QueryTypes.INSERT,
+            replacements: {
+                title: req.body.new_list_name,
+                username: req.session.user.username,
+            }
+        }).then(
+            res.render('my_media', { 
+                username: req.session.user.username, media_list: media_list
+        })
+        )
     };
 
     //removing a media list
     if (typeof req.body.removedList != "undefined")
     {
         console.log("Success, removed list: "+ req.body.removedList);
+        Sequelize.query('DELETE FROM media_list ' +
+        'WHERE name = :name AND user_username = :username' , {
+            type:Sequelize.QueryTypes.DELETE,
+            replacements: {
+                name: req.body.removedList,
+                username: req.session.user.username
+            }
+        }).then(
+            exports.my_media_get(req, res)
+        )
     };
 
     //delete media from list here
-    //use req.body.remMed_list for media list of removed media
-    //use req.body.removedMedia for media to be removed 
-
-
-    res.render('my_media', { 
-        username: req.session.user.username, media_list: media_list
-});
+    if (typeof req.body.removedMedia != "undefined")
+    {
+        console.log("removed media item " + req.body.removedMedia);
+        console.log(req.body.remMedia_list);
+        Sequelize.query('DELETE FROM contains ' +
+        'WHERE list_media_id = :mediaId ' +
+        'AND list_username = :loggedInUser ' +
+        'AND list_name = :listName', {
+            type:Sequelize.QueryTypes.DELETE,
+            replacements: {
+                mediaId: req.body.removedMedia,
+                loggedInUser: req.session.user.username,
+                listName: req.body.remMedia_list
+            }
+        }).then(
+            exports.my_media_get(req, res)
+        )
+    }
 }
 
 exports.profile_get = (req, res) => {
@@ -401,36 +432,102 @@ exports.profile_post = (req, res) => {
 
     errors = [];
 
-    if (!req.body.firstName.length < 1) {
-        errors.push("Update first name");
+    if (req.body.firstName.length > 0) {
+        Sequelize.query('UPDATE people ' +
+        'SET first_name = :firstName ' +
+        'WHERE username = :username' , {
+            type:Sequelize.QueryTypes.UPDATE,
+            replacements: {
+                firstName: req.body.firstName,
+                username: req.session.user.username
+        }}).then(
+            res.status(200).render('profile', {
+                activities: activities, 
+                username: req.session.user.username,
+                media_list
+        })
+        )
     }
-    if (!req.body.lastName.length < 1) {
-        errors.push("Update in last name");
+    if (req.body.lastName.length > 0) {
+        Sequelize.query('UPDATE people ' +
+        'SET last_name = :lastName ' +
+        'WHERE username = :username' , {
+            type:Sequelize.QueryTypes.UPDATE,
+            replacements: {
+                lastName: req.body.lastName,
+                username: req.session.user.username
+        }}).then(
+            res.status(200).render('profile', {
+                activities: activities, 
+                username: req.session.user.username,
+                media_list
+        })
+        )
     }
-    if (!req.body.email.length < 1) {
-        errors.push("Email not valid or unique");
+    if (req.body.email.length > 0) {
+        Sequelize.query('SELECT * FROM people WHERE email = :email', {
+            type:Sequelize.QueryTypes.SELECT,
+            replacements: {
+                email: req.body.email,
+        }}).then(
+            rows => {
+                console.log(rows);
+                if(rows.length > 0) {
+                    console.log(rows.length);
+                    errors.push('That email already exists');
+                    res.render('edit_profile', { errors: errors });
+                    return;
+                }
+                user.email = req.body.email;
+                req.session.user = user;
+                Sequelize.query('UPDATE people ' +
+                'SET email = :newEmail ' +
+                'WHERE username = :username', {
+                    type:Sequelize.QueryTypes.UPDATE,
+                     replacements: {
+                        newEmail: req.body.email,
+                        username: req.session.user.username
+                     }
+                }).then(
+                    res.status(200).render('profile', {
+                        activities: activities, 
+                        username: req.session.user.username,
+                        media_list
+                })
+                )
+            }
+        )
     }
-    if (!req.body.password.length < 1) {
-        errors.push("Update password");
+    if (req.body.password.length > 0) {
+        Sequelize.query('UPDATE people ' +
+        'SET password = :newPassword ' +
+        'WHERE username = :username' , {
+            type:Sequelize.QueryTypes.UPDATE,
+            replacements: {
+                newPassword: req.body.password,
+                username: req.session.user.username
+        }}).then(
+            res.status(200).render('profile', {
+                activities: activities, 
+                username: req.session.user.username,
+                media_list
+        })
+        )
     }
 
     if (errors.length > 0) {
         res.render('edit_profile', { errors: errors });
     }
-        
-    res.status(200).render('profile', {
-            activities: activities, 
-            username: req.session.user.username,
-            media_list
-    });
-
+    
 };
 
 exports.editprofile_post = (req, res) => {
+    console.log('hi');
     res.render('edit_profile')
 };
 
 exports.editprofile_get = (req, res) => {
+    console.log('bye');
     res.render('edit_profile')
     
 };
