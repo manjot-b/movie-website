@@ -269,54 +269,7 @@ exports.search_post = (req, res) => {
     
 }
 
-/*
- () => {
-                Sequelize.query('SELECT first_name, last_name, username FROM ' + 
-                '(people INNER JOIN (SELECT user2_username FROM friends_with ' +
-                'WHERE user1_username = :logged_in_user) AS Q ON username = Q.user2_username)', {
-                type:Sequelize.QueryTypes.INSERT,
-                replacements: {
-                    logged_in_user: req.session.user.username,
-                }
-            }).then(rows=> {
-                console.log(rows);
-                results = [];
-                rows.forEach(row => {
-                    var user = {
-                        first_name: row.first_name,
-                        last_name: row.last_name,
-                        username: row.users_username,
-                    }
-                    results.push(user);
-                });
-                res.render('friends', {title: "Search", searchUserResults: results});
-            })
-                
-            }
-*/
-/*Sequelize.query("SELECT * FROM (people INNER JOIN users ON username = users_username) " +
-        "WHERE (username LIKE :search_term OR last_name LIKE :search_term OR first_name LIKE :search_term) " + 
-        "AND (username NOT IN (SELECT T.user2_username FROM (people INNER JOIN " + 
-        "(SELECT * FROM friends_with WHERE user1_username = :logged_in_user) AS T ON username = user2_username)))" , {
-            type:Sequelize.QueryTypes.SELECT,
-            replacements: {
-            search_term: "%" + req.query.search1 + "%",
-            logged_in_user: req.session.user.username
-        }
-        }).then(rows=> {
-            console.log(rows);
-            results = [];
-            rows.forEach(row => {
-                var user = {
-                    first_name: row.first_name,
-                    last_name: row.last_name,
-                    username: row.users_username,
-                }
-                results.push(user);
-            });
-            res.render('friends', {title: "Search", searchUserResults: results});
-        });
-*/
+
 exports.search_get = (req, res) => {
     if (!req.query.search1) {    // not seaching for something
         res.render('friends', { title: "Search111", username: req.session.user.username, friends: friends });
@@ -343,28 +296,6 @@ exports.search_get = (req, res) => {
             });
             res.render('friends', {title: "Search", searchUserResults: results});
         });
-    // res.render('friends', {
-    //     title: "Search",
-    //     // example data
-    //     searchUserResults: [{
-    //         first_name: 'Mico',
-    //         last_name: 'Tran',
-    //         username: mico.username,
-    //         id: 'asj12321'
-    //     },
-    //     {
-    //         first_name: 'Jona',
-    //         last_name: 'Grageda',
-    //         username: jona.username,
-    //         id: 'asj12321'
-    //     },
-    //     {
-    //         first_name: 'Manjot',
-    //         last_name: 'Bal',
-    //         username: manjot.username,
-    //         id: 'asj12321'
-    //     }], search: req.query.search1
-    // });
 }
 
 exports.my_media_get = (req, res) => {
@@ -430,7 +361,7 @@ exports.my_media_get = (req, res) => {
 exports.my_media_post = (req, res) => {
     console.log(req.body.new_list_name);
 
-    //adding a media list and displaying it on page 
+    //adding a media list and displaying it on page (WORKS) 
     if (typeof req.body.new_list_name != "undefined")
     {
         var newList = {name:req.body.new_list_name, media:[]}
@@ -448,7 +379,7 @@ exports.my_media_post = (req, res) => {
         )
     };
 
-    //removing a media list
+    //removing a media list (DOESNT WORK COMPLETELY YET)
     if (typeof req.body.removedList != "undefined")
     {
         console.log("Success, removed list: "+ req.body.removedList);
@@ -464,7 +395,7 @@ exports.my_media_post = (req, res) => {
         )
     };
 
-    //delete media from list here
+    //delete media from list here (WORKS)
     if (typeof req.body.removedMedia != "undefined")
     {
         console.log("removed media item " + req.body.removedMedia);
@@ -499,6 +430,7 @@ exports.profile_get = (req, res) => {
 
 };
 
+//UPDATES USER INFO AND CHECKS IF EMAIL IS UNIQUE
 exports.profile_post = (req, res) => {
 
     errors = [];
