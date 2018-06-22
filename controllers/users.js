@@ -214,11 +214,18 @@ exports.friends_get = (req, res) => {
 
 exports.friends_post = (req, res) => {
     console.log(req.body.frienduser);
-    if (mico.username === req.body.frienduser) {
-        console.log('hello');
-    }
-    res.render('friends', {username: req.session.user.username, friends: friends
-});
+    Sequelize.query("DELETE FROM friends_with " +
+        "WHERE user2_username = :removed_friend AND user1_username = :logged_in_user"  , {
+            type:Sequelize.QueryTypes.DELETE,
+            replacements: {
+            removed_friend: req.body.frienduser,
+            logged_in_user: req.session.user.username
+        }
+        }).then(
+            
+            exports.friends_get( req, res)
+
+    );
 
 }
 
@@ -243,12 +250,76 @@ exports.search_post = (req, res) => {
     }
 
     // req.body.new_friend_username
+    if (typeof req.body.new_friend_username != 'undefined') {
+        console.log('hello friends');
+        Sequelize.query("INSERT INTO friends_with " +
+        "VALUES(:user1, :user2)"  , {
+            type:Sequelize.QueryTypes.INSERT,
+            replacements: {
+            user1: req.session.user.username,
+            user2: req.body.new_friend_username
+        }
+        }).then(
+            
+            exports.friends_get( req, res)
+
+        );
+
+    }
     
 }
 
+/*
+ () => {
+                Sequelize.query('SELECT first_name, last_name, username FROM ' + 
+                '(people INNER JOIN (SELECT user2_username FROM friends_with ' +
+                'WHERE user1_username = :logged_in_user) AS Q ON username = Q.user2_username)', {
+                type:Sequelize.QueryTypes.INSERT,
+                replacements: {
+                    logged_in_user: req.session.user.username,
+                }
+            }).then(rows=> {
+                console.log(rows);
+                results = [];
+                rows.forEach(row => {
+                    var user = {
+                        first_name: row.first_name,
+                        last_name: row.last_name,
+                        username: row.users_username,
+                    }
+                    results.push(user);
+                });
+                res.render('friends', {title: "Search", searchUserResults: results});
+            })
+                
+            }
+*/
+/*Sequelize.query("SELECT * FROM (people INNER JOIN users ON username = users_username) " +
+        "WHERE (username LIKE :search_term OR last_name LIKE :search_term OR first_name LIKE :search_term) " + 
+        "AND (username NOT IN (SELECT T.user2_username FROM (people INNER JOIN " + 
+        "(SELECT * FROM friends_with WHERE user1_username = :logged_in_user) AS T ON username = user2_username)))" , {
+            type:Sequelize.QueryTypes.SELECT,
+            replacements: {
+            search_term: "%" + req.query.search1 + "%",
+            logged_in_user: req.session.user.username
+        }
+        }).then(rows=> {
+            console.log(rows);
+            results = [];
+            rows.forEach(row => {
+                var user = {
+                    first_name: row.first_name,
+                    last_name: row.last_name,
+                    username: row.users_username,
+                }
+                results.push(user);
+            });
+            res.render('friends', {title: "Search", searchUserResults: results});
+        });
+*/
 exports.search_get = (req, res) => {
     if (!req.query.search1) {    // not seaching for something
-        res.render('friends', { title: "Search111", friends: friends });
+        res.render('friends', { title: "Search111", username: req.session.user.username, friends: friends });
     }
     Sequelize.query("SELECT * FROM (people INNER JOIN users ON username = users_username) " +
         "WHERE (username LIKE :search_term OR last_name LIKE :search_term OR first_name LIKE :search_term) " + 
