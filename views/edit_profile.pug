@@ -1,0 +1,33 @@
+extends layout
+block content
+    br
+    br
+    div(class="login")
+      form(action="/users/profile", class="login_form", method="POST")
+        label First Name (Current: #[strong Mico])
+        br 
+        input(type="text", name="firstName", id="first_name")
+        br
+
+        label Last Name (Current: #[strong Tran])
+        br 
+        input(type="text", name="lastName", id="last_name")
+        br
+
+        label Email (Current: #[strong mico@abc.com])
+        br 
+        input(type="email", name="email", id="email")
+        br
+
+        label Password 
+        br
+        input(type="password", name="password", id="password")
+        br
+
+        input(type="submit", value="Update")
+        br
+        div(class="error_msg")
+            ul
+                each err in errors
+                    li #{err}
+        

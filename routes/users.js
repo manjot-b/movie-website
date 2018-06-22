@@ -20,9 +20,25 @@ router.post('/signup', userController.signup_post);
 
 router.get('/profile', userController.profile_get);
 
+router.post('/profile', userController.profile_post);
+
 router.get('/friends', userController.friends_get); 
 
+router.post('/friends', userController.friends_post);
+
 router.get('/my-media', userController.my_media_get);
+
+router.post('/my-media', userController.my_media_post);
+
+router.get('/search', userController.search_get);
+
+router.post('/search', userController.search_post);
+
+router.get('/editprofile', userController.editprofile_get);
+
+router.post('/editprofile', userController.editprofile_post);
+
+
 
 
 

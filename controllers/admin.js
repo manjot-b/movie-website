@@ -1,4 +1,5 @@
 exports.media_get = (req, res) => {
+    console.log('admin controller');
     if(!req.session.user) {
         res.redirect('http://localhost:3000');
     }
