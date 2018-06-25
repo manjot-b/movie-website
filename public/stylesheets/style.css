@@ -148,7 +148,7 @@ a {
 #title2 {
   float: right;
   width: 70%;
-  background-color: springgreen;
+  /* background-color: springgreen; */
 }
 
 #rating {
@@ -156,7 +156,7 @@ a {
   margin: 0px;
   padding: 0px;
   width: 35%;
-  background-color: sandybrown;
+  /* background-color: sandybrown; */
 }
 
 #add_list {
@@ -164,32 +164,32 @@ a {
   margin: 0px;
   padding: 0px;
   width: 35%;
-  background-color: pink;
+  /* background-color: pink; */
 }
 
 #desc {
   float: right;
   width: 70%;
-  background-color: powderblue;
+  /* background-color: powderblue; */
 }
 
 ul.extra_desc {
   clear: both;
-  background-color: sienna;
+  /* background-color: sienna; */
 }
 
-.user_comment_container ul {
+.user_review_container ul {
   list-style-type: none;
 }
-h3.comment_info {
+h3.review_info {
   float: right;
 }
 
-h3.username_comment {
+h3.username_review {
   float: left;
 }
 
-p.user_comment {
+p.user_review {
   clear: both;
 }
 

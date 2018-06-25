@@ -1,6 +1,7 @@
 var Sequelize = require('../sequelize/sequelize.js');
-var user = require('../sessions/user');
 var async = require('async');
+var user = require('../sessions/user');
+
 //TEST CODE -----------------------------------------
 //test code for recent activities
 var micopost = {username:"Mico", type:"review", movie:"Avengers"};
@@ -65,8 +66,8 @@ exports.login_post = (req, res) => {
                     console.log(rows);
                     user.username = req.body.username;
                     user.password = req.body.password;
+                    user.isAdmin = true;
                     req.session.user = user;
-                    req.session.user.isAdmin = true;
                     console.log('test');
                     res.redirect('/admin/media');
                     console.log('tset2');
@@ -77,6 +78,7 @@ exports.login_post = (req, res) => {
             else {
                 user.username = req.body.username;
                 user.password = req.body.password;
+                user.isAdmin = false;
                 req.session.user = user;
                 res.redirect('/users/dashboard');
             }

@@ -3,5 +3,6 @@ module.exports = {
     lastName: null,
     email: null,
     username: null,
-    password: null
+    password: null,
+    isAdmin: null
 }

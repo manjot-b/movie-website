@@ -17,9 +17,12 @@ block content
         each result in searchResults
           tr
             th
-              img(src="/pictures/posters/movie_poster.jpg", alt="#{results.title} poster") 
+              img(src="/pictures/posters/movie_poster.jpg", alt="#{results.name} poster") 
             th 
-              a(href="http://localhost:3000/catalog/" + result.id) #{result.title}
-            #{result.title}
+              a(href="http://localhost:3000/catalog/" + result.id) #{result.name} 
             th #{result.year}
-            th #{result.rating}
+            if (result.avg_rating)
+              th #{result.avg_rating}
+            else
+              th N/A  
+            

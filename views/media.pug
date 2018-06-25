@@ -1,41 +1,38 @@
 extends layout
 
-mixin comment(username, comment, rating, date)
-  h3(class="username_comment") #{username}   
-  h3(class="comment_info") #{rating}   #{date}
-  p(class="user_comment") #{comment}
+mixin review(username, review, rating, date)
+  h3(class="username_review") #{username}   
+  h3(class="review_info") #{rating}   #{date}
+  p(class="user_review") #{review}
 
 block content
   div(class="media_container")
     h1(id="trailer") Movie Trailer
     h1(id="poster") Poster
-    h1(id="title2") #{title}
+    h1(id="title2") #{media.name}
     h2(id="add_list") Add to list
-    h2(id="rating") 5.0/7.0   RATE
-    p(id="desc") this is a description for a movie. hope 
-      | you are reading this wonderful text boi.
-      | you are reading this wonderful text boi.
-      | you are reading this wonderful text boi.
-      | you are reading this wonderful text boi.
-      | you are reading this wonderful text boi.
-      | you are reading this wonderful text boi.
-      | you are reading this wonderful text boi.
-      | you are reading this wonderful text boi.
-      | you are reading this wonderful text boi.
-      | you are reading this wonderful text boi.
-      | you are reading this wonderful text boi.
+    h2(id="rating") Rating 
+      if (media.avg_rating)
+        | #{media.avg_rating} /10
+      else
+        | N/A
+    p(id="desc") #{media.description}
 
 
     ul(class="extra_desc")
-      li Year: 2011
-      li Director: Christopher Nolan
-      li Cast: King Kong, Shrek, Barbie
+      li Year: #{media.year}
+      li 
+        if (isMovie)
+          | Director: #{media.director} 
+        else
+          | Creator: #{media.creator}
+      li Cast: #{cast}
     
-    div(class="user_comment_container")
+    div(class="user_review_container")
       ul
         li 
-          +comment('toad', 'omg, movie toooooooo gooooood', '10/10', 'Jun, 19, 2018')
+          +review('toad', 'omg, movie toooooooo gooooood', '10/10', 'Jun, 19, 2018')
         li
-          +comment('toad', 'omg, movie toooooooo gooooood', '10/10', 'Jun, 19, 2018')
+          +review('toad', 'omg, movie toooooooo gooooood', '10/10', 'Jun, 19, 2018')
         li
-          +comment('toad', 'omg, movie toooooooo gooooood', '10/10', 'Jun, 19, 2018')
+          +review('toad', 'omg, movie toooooooo gooooood', '10/10', 'Jun, 19, 2018')

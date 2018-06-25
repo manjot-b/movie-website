@@ -7,6 +7,6 @@ router.get('/search', catalogController.search_get);
 
 router.post('/search', catalogController.search_post);
 
-router.get('/:name', catalogController.movie_get);
+router.get('/:id', catalogController.media_get);
 
 module.exports = router;
