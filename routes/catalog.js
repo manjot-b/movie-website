@@ -9,4 +9,6 @@ router.post('/search', catalogController.search_post);
 
 router.get('/:id', catalogController.media_get);
 
+router.post('/:id', catalogController.media_post);
+
 module.exports = router;

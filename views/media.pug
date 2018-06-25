@@ -1,14 +1,23 @@
 extends layout
 
-mixin review(username, review, rating, date)
+mixin comment(username, comment, date)
   h3(class="username_review") #{username}   
-  h3(class="review_info") #{rating}   #{date}
+  h3(class="review_info") #{date}
+  p(class="user_review") #{comment}
+
+mixin review(username, review, rating, date, comments)
+  h3(class="username_review") #{username}   
+  h3(class="review_info") #{rating}/10    #{date}
   p(class="user_review") #{review}
+  ul
+    each comment in comments
+      li
+        +comment(comment.username_comment, comment.comment_text, comment.date_created)
 
 block content
   div(class="media_container")
     h1(id="trailer") Movie Trailer
-    h1(id="poster") Poster
+    img(src="/pictures/posters/movie_poster.jpg", alt="#{media.name} poster") 
     h1(id="title2") #{media.name}
     h2(id="add_list") Add to list
     h2(id="rating") Rating 
@@ -16,6 +25,11 @@ block content
         | #{media.avg_rating} /10
       else
         | N/A
+      form(action="/catalog/" + media.id, method="POST")
+        input(type="submit", value="Rate")
+        select(name="rating")
+          for i in [1,2,3,4,5,6,7,8,9,10]
+            option(value=i) #{i}
     p(id="desc") #{media.description}
 
 
@@ -30,9 +44,13 @@ block content
     
     div(class="user_review_container")
       ul
-        li 
-          +review('toad', 'omg, movie toooooooo gooooood', '10/10', 'Jun, 19, 2018')
-        li
-          +review('toad', 'omg, movie toooooooo gooooood', '10/10', 'Jun, 19, 2018')
-        li
-          +review('toad', 'omg, movie toooooooo gooooood', '10/10', 'Jun, 19, 2018')
+        each reviewData in reviews
+          li
+            +review(reviewData.review.username, reviewData.review.review_text, reviewData.review.rating, reviewData.review.date_created, reviewData.comments)
+
+        //- li 
+        //-   +review('toad', 'omg, movie toooooooo gooooood', '10', 'Jun, 19, 2018')
+        //- li
+        //-   +review('toad', 'omg, movie toooooooo gooooood', '10', 'Jun, 19, 2018')
+        //- li
+        //-   +review('toad', 'omg, movie toooooooo gooooood', '10', 'Jun, 19, 2018')

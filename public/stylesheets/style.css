@@ -138,10 +138,10 @@ a {
   background-color: violet;
 }
 
-#poster {
+.media_container img {
   float: left;
   width: 25%;
-  height: 300px;
+  /* height: 300px; */
   background-color: turquoise;
 }
 
@@ -174,8 +174,14 @@ a {
 }
 
 ul.extra_desc {
-  clear: both;
+  /* clear: both; */
+  float: left;
+  margin-left: 3em;
   /* background-color: sienna; */
+}
+
+.user_review_container {
+  clear: both;
 }
 
 .user_review_container ul {

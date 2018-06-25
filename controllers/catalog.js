@@ -69,15 +69,43 @@ exports.media_get = (req, res) => {
                     }
                     callback(null, cast);
                 });
+            },
+
+            reviews: (callback) => {
+                var reviewList = [];
+
+                Sequelize.query("SELECT * FROM review, people WHERE review_username = username", {
+                    type: Sequelize.QueryTypes.SELECT
+                }).then(rows => {                    
+                    async.each(rows, (row, callback) => {
+                        Sequelize.query("SELECT * FROM comment, review WHERE review_id = review.id " + 
+                            "AND review.id = :id", {
+                            type: Sequelize.QueryTypes.SELECT,
+                            replacements: {
+                                id: row.id
+                            }
+                        }).then(comments => {
+                            reviewList.push({
+                                review: row,
+                                comments: comments
+                            });
+                            callback();
+                        });
+                    }, (err) => {
+                        reviewList.forEach(r => {
+                            callback(null, reviewList);
+                        })
+                    });
+                })
             }
         }, (err, results) => {
             if (results.movieData.isMovie) {
-                console.log(results.movieData.media.director);
                 res.render('media', {
                     title: results.movieData.media.name,
                     media: results.movieData.media,
                     isMovie: true,
-                    cast: results.cast
+                    cast: results.cast,
+                    reviews: results.reviews
                 });
             }
             else {
@@ -85,17 +113,47 @@ exports.media_get = (req, res) => {
                     title: results.tvShowData.media.name,
                     media: results.tvShowData.media,
                     isMovie: false,
-                    cast: results.cast
+                    cast: results.cast,
+                    reviews: results.reviews
                 });
             }
         });
-        // res.render('media', {
-        //     media: rows[0]
-        // })
     });
 
-    // res.render('media', { title: req.params.id } );
 };
+
+exports.media_post = (req, res) => {
+    if (req.body.rating) {
+        Sequelize.query("SELECT avg_rating FROM media WHERE id = :id", {
+            type: Sequelize.QueryTypes.SELECT,
+            replacements: {
+                id: req.params.id
+            }
+        }).then(rows => {
+            if (!rows[0].avg_rating) {
+                Sequelize.query("UPDATE media SET avg_rating = :rating WHERE id = :id", {
+                    type: Sequelize.QueryTypes.UPDATE,
+                    replacements: {
+                        rating: req.body.rating,
+                        id: req.params.id
+                    }
+                }).then( () => {
+                    res.redirect("");
+                })
+            }
+            else {  // average rating is not null/0
+                //TO-DO: First rewrite using async.sequence, then finish this block
+                Sequelize.query("UPDATE media SET avg_rating = :rating WHERE id = :id", {
+                    type: Sequelize.QueryTypes.UPDATE,
+                    replacements: {
+                        rating: req.body.rating,
+                        id: req.params.id
+                    }
+                })
+            }
+        })
+    }
+}
 
 exports.search_post = (req, res) => {
     var words = req.body.catalogSearchBox.split(' ');
