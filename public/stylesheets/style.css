@@ -181,12 +181,23 @@ ul.extra_desc {
 }
 
 .user_review_container {
+  padding-top: 2em;
   clear: both;
 }
 
 .user_review_container ul {
   list-style-type: none;
 }
+
+.review_form {
+  text-align: left;
+}
+
+.review_form input {
+  margin-right: 1em;
+  width: 25%;
+}
+
 h3.review_info {
   float: right;
 }

@@ -74,8 +74,12 @@ exports.media_get = (req, res) => {
             reviews: (callback) => {
                 var reviewList = [];
 
-                Sequelize.query("SELECT * FROM review, people WHERE review_username = username", {
-                    type: Sequelize.QueryTypes.SELECT
+                Sequelize.query("SELECT * FROM review, people WHERE review_username = username " + 
+                    "AND review_media_id = :mediaId", {
+                    type: Sequelize.QueryTypes.SELECT,
+                    replacements: {
+                        mediaId: req.params.id
+                    }
                 }).then(rows => {                    
                     async.each(rows, (row, callback) => {
                         Sequelize.query("SELECT * FROM comment, review WHERE review_id = review.id " + 
@@ -92,9 +96,10 @@ exports.media_get = (req, res) => {
                             callback();
                         });
                     }, (err) => {
-                        reviewList.forEach(r => {
-                            callback(null, reviewList);
-                        })
+                        callback(null, reviewList);
+                        // reviewList.forEach(r => {
+                        //     callback(null, reviewList);
+                        // })
                     });
                 })
             }
@@ -123,35 +128,152 @@ exports.media_get = (req, res) => {
 };
 
 exports.media_post = (req, res) => {
+    if (!req.session.user) {
+        res.redirect("http://localhost:3000");
+    }
+
     if (req.body.rating) {
-        Sequelize.query("SELECT avg_rating FROM media WHERE id = :id", {
-            type: Sequelize.QueryTypes.SELECT,
-            replacements: {
-                id: req.params.id
-            }
-        }).then(rows => {
-            if (!rows[0].avg_rating) {
-                Sequelize.query("UPDATE media SET avg_rating = :rating WHERE id = :id", {
+        async.waterfall([
+            (callback) => {
+                Sequelize.query("SELECT * FROM review WHERE review_media_id = :mediaId " + 
+                    "AND review_username = :username", {
+                    type: Sequelize.QueryTypes.SELECT,
+                    replacements: {
+                        mediaId: req.params.id,
+                        username: req.session.user.username
+                }
+            }).then(rows => {
+                if (rows.length > 0) {
+                    callback(req.session.user.username + " already reviewed this media")
+                }
+                else {
+                    callback(null)
+                }
+            })
+            },
+
+            (callback) => {
+                Sequelize.query("SELECT avg_rating FROM media WHERE id = :id", {
+                    type: Sequelize.QueryTypes.SELECT,
+                    replacements: {
+                        id: req.params.id
+                    }
+                }).then(rows => {
+                    callback(null, rows[0].avg_rating)
+                })
+            },
+
+            (avgRating, callback) => {
+                if (!avgRating) {
+                    callback(null, req.body.rating);
+                }
+                else {  // average rating is not null/0
+                    Sequelize.query("SELECT COUNT(*) AS count, SUM(rating) AS sumRating FROM media, review " + 
+                        "WHERE media.id = review.review_media_id", {
+                        type: Sequelize.QueryTypes.SELECT
+                    }).then(rows => {
+                        var count = parseFloat(rows[0].count);
+                        var sumRating = parseFloat(rows[0].sumRating);
+                        var avgRating = (sumRating + parseInt(req.body.rating)) / ++count;    // convert to numbers
+                        callback(null, avgRating);
+                    })
+                }
+            },
+
+            (avgRating, callback) => {
+                Sequelize.query("UPDATE media SET avg_rating = :avgRating WHERE id = :id", {
                     type: Sequelize.QueryTypes.UPDATE,
                     replacements: {
-                        rating: req.body.rating,
+                        avgRating: avgRating,
                         id: req.params.id
                     }
                 }).then( () => {
-                    res.redirect("");
+                    callback(null);
                 })
+            },
+
+            (callback) => {
+                Sequelize.query("INSERT INTO review (date_created, review_username, review_media_id, review_text, rating) " + 
+                                    "VALUES(CURRENT_TIMESTAMP(), :username, :mediaId, :review, :rating)", {
+                                    type: Sequelize.QueryTypes.INSERT,
+                                    replacements: {
+                                        username: req.session.user.username,
+                                        mediaId: req.params.id,
+                                        review: req.body.review,
+                                        rating: req.body.rating
+                                    }
+                    }).then( () => {
+                        callback(null);
+                })  
             }
-            else {  // average rating is not null/0
-                //TO-DO: First rewrite using async.sequence, then finish this block
-                Sequelize.query("UPDATE media SET avg_rating = :rating WHERE id = :id", {
-                    type: Sequelize.QueryTypes.UPDATE,
-                    replacements: {
-                        rating: req.body.rating,
-                        id: req.params.id
-                    }
-                })
+
+
+        ], (err, results) => {
+            if(err) {
+                console.log(err);
             }
-        })
+            res.redirect("/catalog/"+req.params.id);
+        });
+
+        // ****** OLD **********
+        // Sequelize.query("SELECT * FROM review WHERE review_media_id = :mediaId " + 
+        //     "AND review_username = :username", {
+        //         type: Sequelize.QueryTypes.SELECT,
+        //         replacements: {
+        //             mediaId: req.params.id,
+        //             username: req.session.user.username
+        //         }
+        //     }).then(rows => {
+        //     if (rows.length > 0) {
+        //         console.log('user already review movie')
+        //     }
+        //     else {
+        //         Sequelize.query("SELECT avg_rating FROM media WHERE id = :id", {
+        //             type: Sequelize.QueryTypes.SELECT,
+        //             replacements: {
+        //                 id: req.params.id
+        //             }
+        //         }).then(rows => {
+        //             var avgRating;
+        //             if (!rows[0].avg_rating) {
+        //                 avgRating = req.body.rating;
+        //             }
+        //             else {  // average rating is not null/0
+        //                 Sequelize.query("SELECT COUNT(*) AS count, SUM(rating) AS sumRating FROM media, review " + 
+        //                     "WHERE media.id = review.review_media_id", {
+        //                     type: Sequelize.QueryTypes.SELECT
+        //                 }).then(rows => {
+        //                     var count = parseFloat(rows[0].count);
+        //                     var sumRating = parseFloat(rows[0].sumRating);
+        //                     avgRating = (sumRating + parseInt(req.body.rating)) / ++count;    // convert to numbers
+                        
+        //                     Sequelize.query("UPDATE media SET avg_rating = :avgRating WHERE id = :id", {
+        //                         type: Sequelize.QueryTypes.UPDATE,
+        //                         replacements: {
+        //                             avgRating: avgRating,
+        //                             id: req.params.id
+        //                         }
+        //                     }).then( () => {
+        //                         // console.log(Sequelize.fn('NOW'));
+        //                         Sequelize.query("INSERT INTO review (date_created, review_username, review_media_id, review_text, rating) " + 
+        //                             "VALUES(CURRENT_TIMESTAMP(), :username, :mediaId, :review, :rating)", {
+        //                             type: Sequelize.QueryTypes.INSERT,
+        //                             replacements: {
+        //                                 username: req.session.user.username,
+        //                                 mediaId: req.params.id,
+        //                                 review: req.body.review,
+        //                                 rating: req.body.rating
+        //                             }
+        //                         }).then( () => {
+        //                             res.redirect("/catalog/"+req.params.id);
+        //                         })  
+        //                     })
+        //                 })    
+        //             }
+                    
+        //         })
+        //     }
+        // })
     }
 }
 
