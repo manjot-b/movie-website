@@ -24,19 +24,6 @@ var media_list1 = {name:"Love me my soapys", media:[avengers, riverdale, jane]};
 var media_list2 = {name:"I <3 Jane", media:[jane]};
 var media_list = [media_list1, media_list2];
 
-/*for (list in media_list) {
-    for (medialist in list.media) {
-        for (media in medialist.media) {
-            var temp = media.name;
-            var prefix = "http://localhost:3000/catalog/movie/"
-            var ext = temp.replace(/ /g, "-");
-            var newlink = prefix.concat(ext);
-            media.link = newlink;
-
-        }
-    }
-}*/
-//-----------------------------------------------
 exports.login_post = (req, res) => {
     Sequelize.query('SELECT * FROM (people INNER JOIN users ON username = users_username)' + 
     'WHERE username = :username AND password = :password', {
@@ -168,19 +155,6 @@ exports.signup_post = (req, res) => {
             )
         }
     )
-
-    // if (errors.length > 0) {
-    //     res.render('signup', { errors: errors });
-    // }
-
-    // user.username = req.body.username;
-    // user.password = req.body.password;
-
-    // req.session.user = user;
-    // res.render('dashboard', { 
-    //     activities: activities, 
-    //     username: user.username 
-    // })
 };
 
 exports.friends_get = (req, res) => {

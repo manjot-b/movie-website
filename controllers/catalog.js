@@ -1,16 +1,31 @@
+var Sequelize = require('../sequelize/sequelize.js');
+
 exports.movie_get = (req, res) => {
     res.render('media', { title: req.params.name } );
 };
 
 exports.search_post = (req, res) => {
+    //var words = req.body.catalogSearchBox.split(' ');
+   // var query = "";
+
+    //words.forEach(word => {
+   //     query += word + '+';
+   // });
+
+   if (typeof req.body.catalogSearchBox != 'undefined') {
     var words = req.body.catalogSearchBox.split(' ');
     var query = "";
 
-    words.forEach(word => {
-        query += word + '+';
-    });
+    for(var i=0; i<words.length; i++) {
+        if (i == words.length - 1) {
+            query += words;
+            break; 
+        }
+        query += words + '+';
+    }
 
-    res.redirect('search?search=' + query)
+        res.redirect('search?search=' + query)
+    }
 }
 
 exports.search_get = (req, res) => {
@@ -18,6 +33,21 @@ exports.search_get = (req, res) => {
         res.render('search', { title: "Search" } );
     }
 
+    Sequelize.query('SELECT * FROM media ' +
+    'WHERE name LIKE :searchedTitle', {
+        type: Sequelize.QueryTypes.SELECT,
+        replacements: {
+            searchedTitle: "%" + req.query.search + "%"
+        }
+    }).then(rows=> {
+        console.log(rows);
+        results = [];
+        rows.forEach(row => {
+            results.push(row.name);
+        });
+        res.render('search', {title: "Search", searchMediaResults: results});
+    });
+    /*
     res.render('search', {
         title: "Search",
         // example data
@@ -46,5 +76,5 @@ exports.search_get = (req, res) => {
             id: 'asj12321'
         }
     ]
-    });
+    });*/
 }
