@@ -13,9 +13,8 @@ block media_content
           th
           th ID
           th Title
-          th Director
+          th Description
           th Year
-          th Rating
           th
         each result in searchResults
           tr
@@ -24,9 +23,8 @@ block media_content
             th #{result.id}
             th 
               a(href="http://localhost:3000/catalog/" + result.id) #{result.title}
-            th #{result.director}
+            th #{result.description}
             th #{result.year}
-            th #{result.rating}
             th 
               a(href="edit?id=" + result.id) edit
     if(movieData)
@@ -43,9 +41,12 @@ block media_content
           div(class="admin_add_movie_content")
             li
               label(for="description") Description
-              input(type="text", name="year", id="year", value=movieData.description)
+              input(type="text", name="description", id="description", value=movieData.description)
           div(class="admin_add_movie_content")
             li
               input(type="submit", value="Submit")
           if (success)
             li(style="color:green") Update successful!
+          else
+            each err in errors
+              li(style = "color:red") #{err}
