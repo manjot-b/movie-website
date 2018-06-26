@@ -15,13 +15,19 @@ block content
                             h2 #{medlist.name}
                             input(type="submit", value="Remove List")
                             input(name="removedList", type="hidden", value=medlist.name)
-                    br       
+                    br
+                    br
+                       
                     each media in medlist.media
                         a(href="http://localhost:3000/catalog/" + media.name) #{media.name} (#{media.year})
-                        
+                        br
                         form(action="/users/my-media", class="edit_profile_button", method="POST")
                             input(type="submit", value="Remove Media")
                             input(name="removedMedia", type="hidden", value=media.id)
                             input(name="remMedia_list", type="hidden", value=medlist.name)
                         br
+                        br
+                    br
+                
+                    
 

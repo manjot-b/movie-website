@@ -199,6 +199,8 @@ p.user_comment {
  
   
 }
+
+
 .border li {
   
   border-bottom: 2px groove black;
@@ -215,6 +217,15 @@ p.user_comment {
   list-style-type: none;
 }
 
+.medialist form {
+  display: inline-block;
+  right: 50px;
+}
+
+.medialist input {
+  display: inline-block;
+  right: 200px;
+}
 
 .profile_header img {
   float: left;
@@ -244,6 +255,7 @@ p.user_comment {
 .basic_info {
   clear: both;
   text-align: left;
+  text-transform: capitalize;
 }
   
 .basic_info ul {

@@ -6,6 +6,11 @@ html
   body
     div(class="nav")
       h1 SceneAddicts
+      form(action="/", class="edit_profile_button", method="POST")
+        input(type="submit", value="Logout")
+            
+
+
       
       if (isAdmin)
         ul
@@ -25,6 +30,6 @@ html
               li Search
             a(href="http://localhost:3000/users/my-media")
               li My Media
-            a(href="http://localhost:3000/users/profile")
+            a(href="http://localhost:3000/users/profile/myprofile")
               li Profile
     block content

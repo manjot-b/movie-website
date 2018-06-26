@@ -54,11 +54,15 @@ block content
                             
                             form(action="/users/friends", class="remove_friend_button", method="POST")
                                 label #{friend.name}
+                                    a(href="http://localhost:3000/users/profile/" + friend.username)
+                                        p (#{friend.username})
+                            
                                 input(type="submit", value="Remove")
                                 input(name="frienduser", type="hidden", value=friend.username)
+                            br
 
-                                a(href='http://localhost:3000/users/profile')
-                                    p (#{friend.username})
+                                
+                        
       
         
-    
+    //a(href='http://localhost:3000/users/profile')
