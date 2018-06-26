@@ -5,10 +5,14 @@ mixin comment(username, comment, date)
   h3(class="review_info") #{date}
   p(class="user_review") #{comment}
 
-mixin review(username, review, rating, date, comments)
+mixin review(username, review, rating, date, id, comments)
   h3(class="username_review") #{username}   
-  h3(class="review_info") #{rating}/10    #{date}
+  h3(class="review_info") Rated #{rating}/10 on #{date}
   p(class="user_review") #{review}
+  form(action="/catalog/" + media.id, method="POST", class="review_form")
+    input(type="text", placeholder="Comment...", name="comment")
+    input(type="submit", value="Comment")
+    input(name="reviewId",type="hidden", value=id)
   ul
     each comment in comments
       li
@@ -19,7 +23,11 @@ block content
     h1(id="trailer") Movie Trailer
     img(src="/pictures/posters/movie_poster.jpg", alt="#{media.name} poster") 
     h1(id="title2") #{media.name}
-    h2(id="add_list") Add to list
+    form(action="/catalog/" + media.id, method="POST", id="rating")
+      select(name="userList")
+        each list in userLists
+          option(value=list) #{list}
+      input(type="submit", value="Add to List")
     h2(id="rating") Rating 
       if (media.avg_rating)
         | #{media.avg_rating} /10
@@ -47,7 +55,7 @@ block content
       ul
         each reviewData in reviews
           li
-            +review(reviewData.review.username, reviewData.review.review_text, reviewData.review.rating, reviewData.review.date_created, reviewData.comments)
+            +review(reviewData.review.username, reviewData.review.review_text, reviewData.review.rating, reviewData.review.date_created, reviewData.review.id, reviewData.comments)
 
         //- li 
         //-   +review('toad', 'omg, movie toooooooo gooooood', '10', 'Jun, 19, 2018')

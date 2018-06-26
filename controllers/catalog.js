@@ -102,6 +102,22 @@ exports.media_get = (req, res) => {
                         // })
                     });
                 })
+            },
+
+            userLists: (callback) => {
+                var userLists = [];
+
+                Sequelize.query("SELECT name FROM media_list WHERE user_username = :username", {
+                    type: Sequelize.QueryTypes.SELECT,
+                    replacements: {
+                        username: req.session.user.username
+                    }
+                }).then(rows => {
+                    rows.forEach(row => {
+                        userLists.push(row.name);
+                    });
+                    callback(null, userLists);
+                })
             }
         }, (err, results) => {
             if (results.movieData.isMovie) {
@@ -110,7 +126,8 @@ exports.media_get = (req, res) => {
                     media: results.movieData.media,
                     isMovie: true,
                     cast: results.cast,
-                    reviews: results.reviews
+                    reviews: results.reviews,
+                    userLists: results.userLists
                 });
             }
             else {
@@ -119,7 +136,8 @@ exports.media_get = (req, res) => {
                     media: results.tvShowData.media,
                     isMovie: false,
                     cast: results.cast,
-                    reviews: results.reviews
+                    reviews: results.reviews,
+                    userLists: results.userLists
                 });
             }
         });
@@ -132,7 +150,37 @@ exports.media_post = (req, res) => {
         res.redirect("http://localhost:3000");
     }
 
-    if (req.body.rating) {
+    else if(req.body.comment) {
+        Sequelize.query("INSERT INTO comment " + 
+            "(date_created, comment_text, review_id, username_comment) " +
+            "VALUES (CURRENT_TIMESTAMP(), :text, :reviewId, :username)", {
+                type: Sequelize.QueryTypes.INSERT,
+                replacements: {
+                    text: req.body.comment,
+                    reviewId: req.body.reviewId,
+                    username: req.session.user.username
+                }
+            }).then( () => {
+                res.redirect("/catalog/"+req.params.id);
+            })
+    }
+
+    else if (req.body.userList) {
+        Sequelize.query("INSERT INTO contains " + 
+            "(list_name, list_username, list_media_id) " +
+            "VALUES (:listName, :username, :mediaId)", {
+                type: Sequelize.QueryTypes.INSERT,
+                replacements: {
+                    listName: req.body.userList,
+                    username: req.session.user.username,
+                    mediaId: req.params.id
+                }
+            }).then( () => {
+                res.redirect("/catalog/"+req.params.id);
+            })
+    }
+
+    else if (req.body.rating) {
         async.waterfall([
             (callback) => {
                 Sequelize.query("SELECT * FROM review WHERE review_media_id = :mediaId " + 
@@ -215,65 +263,6 @@ exports.media_post = (req, res) => {
             res.redirect("/catalog/"+req.params.id);
         });
 
-        // ****** OLD **********
-        // Sequelize.query("SELECT * FROM review WHERE review_media_id = :mediaId " + 
-        //     "AND review_username = :username", {
-        //         type: Sequelize.QueryTypes.SELECT,
-        //         replacements: {
-        //             mediaId: req.params.id,
-        //             username: req.session.user.username
-        //         }
-        //     }).then(rows => {
-        //     if (rows.length > 0) {
-        //         console.log('user already review movie')
-        //     }
-        //     else {
-        //         Sequelize.query("SELECT avg_rating FROM media WHERE id = :id", {
-        //             type: Sequelize.QueryTypes.SELECT,
-        //             replacements: {
-        //                 id: req.params.id
-        //             }
-        //         }).then(rows => {
-        //             var avgRating;
-        //             if (!rows[0].avg_rating) {
-        //                 avgRating = req.body.rating;
-        //             }
-        //             else {  // average rating is not null/0
-        //                 Sequelize.query("SELECT COUNT(*) AS count, SUM(rating) AS sumRating FROM media, review " + 
-        //                     "WHERE media.id = review.review_media_id", {
-        //                     type: Sequelize.QueryTypes.SELECT
-        //                 }).then(rows => {
-        //                     var count = parseFloat(rows[0].count);
-        //                     var sumRating = parseFloat(rows[0].sumRating);
-        //                     avgRating = (sumRating + parseInt(req.body.rating)) / ++count;    // convert to numbers
-                        
-        //                     Sequelize.query("UPDATE media SET avg_rating = :avgRating WHERE id = :id", {
-        //                         type: Sequelize.QueryTypes.UPDATE,
-        //                         replacements: {
-        //                             avgRating: avgRating,
-        //                             id: req.params.id
-        //                         }
-        //                     }).then( () => {
-        //                         // console.log(Sequelize.fn('NOW'));
-        //                         Sequelize.query("INSERT INTO review (date_created, review_username, review_media_id, review_text, rating) " + 
-        //                             "VALUES(CURRENT_TIMESTAMP(), :username, :mediaId, :review, :rating)", {
-        //                             type: Sequelize.QueryTypes.INSERT,
-        //                             replacements: {
-        //                                 username: req.session.user.username,
-        //                                 mediaId: req.params.id,
-        //                                 review: req.body.review,
-        //                                 rating: req.body.rating
-        //                             }
-        //                         }).then( () => {
-        //                             res.redirect("/catalog/"+req.params.id);
-        //                         })  
-        //                     })
-        //                 })    
-        //             }
-                    
-        //         })
-        //     }
-        // })
     }
 }
 
