@@ -114,6 +114,11 @@ exports.signup_post = (req, res) => {
         errors.push("Enter in password");
     }
 
+    if (errors.length > 0) {
+        res.render('signup', { errors: errors });
+    }
+
+    else {
     Sequelize.query('SELECT * FROM (people INNER JOIN users ON username = users_username)' + 
     'WHERE username = :username OR email = :email', {
         type:Sequelize.QueryTypes.SELECT,
@@ -124,12 +129,13 @@ exports.signup_post = (req, res) => {
     }).then(
         rows => {
             console.log(rows);
+            console.log(rows.length);            
             if(rows.length > 0) {
-                console.log(rows.length);
                 errors.push('That username or email already exists');
                 res.render('signup', { errors: errors });
                 return;
             }
+            else{
             user.username = req.body.username;
             user.email = req.body.email;
             req.session.user = user;
@@ -151,25 +157,25 @@ exports.signup_post = (req, res) => {
                     replacements: {
                         username: req.body.username,
                     }
+                }).then(() => {
+                    user.username = req.body.username;
+                    user.password = req.body.password;
+
+                    req.session.user = user;
+                    res.render('dashboard', { 
+                        activities: activities, 
+                        username: user.username 
+                    })
                 })
-                    res.redirect('/users/dashboard');
+                    // res.redirect('/users/dashboard');
                 }
             )
         }
+        }
     )
+}
 
-    if (errors.length > 0) {
-        res.render('signup', { errors: errors });
-    }
-
-    user.username = req.body.username;
-    user.password = req.body.password;
-
-    req.session.user = user;
-    res.render('dashboard', { 
-        activities: activities, 
-        username: user.username 
-    })
+    
 };
 
 //friends page
@@ -370,7 +376,7 @@ exports.my_media_post = (req, res) => {
         )
     };
 
-    //removing a media list (DOESNT WORK COMPLETELY YET)
+    //removing a media list 
     if (typeof req.body.removedList != "undefined")
     {
         console.log("Success, removed list: "+ req.body.removedList);
