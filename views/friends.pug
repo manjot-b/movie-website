@@ -19,10 +19,9 @@ block content
                 each result in searchUserResults
                     tr
                         th
-                            img(src="/pictures/posters/movie_poster.jpg", alt="#{results.title} poster") 
+                            img(src="/pictures/profile.png", alt="#{results.title} poster") 
                         th 
-                            a(href="http://localhost:3000/users/profile") #{result.first_name}
-                            #{result.first_name}
+                            a(href="http://localhost:3000/users/profile/" + result.username) #{result.first_name}
                         th #{result.last_name}
                         th #{result.username}
                         th

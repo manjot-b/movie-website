@@ -25,19 +25,6 @@ var activities = [micopost, manjotpost, jonapost];
 // var media_list2 = {name:"I <3 Jane", media:[jane]};
 // var media_list = [media_list1, media_list2];
 
-/*for (list in media_list) {
-    for (medialist in list.media) {
-        for (media in medialist.media) {
-            var temp = media.name;
-            var prefix = "http://localhost:3000/catalog/movie/"
-            var ext = temp.replace(/ /g, "-");
-            var newlink = prefix.concat(ext);
-            media.link = newlink;
-
-        }
-    }
-}*/
-//-----------------------------------------------
 exports.login_post = (req, res) => {
     Sequelize.query('SELECT * FROM (people INNER JOIN users ON username = users_username)' + 
     'WHERE username = :username AND password = :password', {
@@ -250,7 +237,6 @@ exports.search_post = (req, res) => {
 
     // add friend with user if button is pressed
     if (typeof req.body.new_friend_username != 'undefined') {
-        console.log('hello friends');
         Sequelize.query("INSERT INTO friends_with " +
         "VALUES(:user1, :user2)"  , {
             type:Sequelize.QueryTypes.INSERT,
@@ -277,7 +263,8 @@ exports.search_get = (req, res) => {
     Sequelize.query("SELECT * FROM (people INNER JOIN users ON username = users_username) " +
         "WHERE (username LIKE :search_term OR last_name LIKE :search_term OR first_name LIKE :search_term) " + 
         "AND (username NOT IN (SELECT T.user2_username FROM (people INNER JOIN " + 
-        "(SELECT * FROM friends_with WHERE user1_username = :logged_in_user) AS T ON username = user2_username)))" , {
+        "(SELECT * FROM friends_with WHERE user1_username = :logged_in_user) AS T ON username = user2_username))) " + 
+        "AND username <> :logged_in_user", {
             type:Sequelize.QueryTypes.SELECT,
             replacements: {
             search_term: "%" + req.query.search1 + "%",
@@ -294,7 +281,11 @@ exports.search_get = (req, res) => {
                 }
                 results.push(user);
             });
-            res.render('friends', {title: "Search", searchUserResults: results});
+            res.render('friends', {
+                title: "Search", 
+                searchUserResults: results,
+                search: req.query.search1
+            });
         });
 }
 
@@ -366,7 +357,7 @@ exports.my_media_post = (req, res) => {
     {
         var newList = {name:req.body.new_list_name, media:[]}
         media_list.push(newList);
-        Sequelize.query('INSERT INTO media_list VALUES (:title, :username, null)' , {
+        Sequelize.query('INSERT INTO media_list VALUES (:title, :username)' , {
             type:Sequelize.QueryTypes.INSERT,
             replacements: {
                 title: req.body.new_list_name,
@@ -390,9 +381,9 @@ exports.my_media_post = (req, res) => {
                 name: req.body.removedList,
                 username: req.session.user.username
             }
-        }).then(
-            exports.my_media_get(req, res)
-        )
+        }).then( () => {
+            res.redirect("http://localhost:3000/users/my-media");
+        })
     };
 
     //delete media from list here (WORKS)
@@ -410,9 +401,9 @@ exports.my_media_post = (req, res) => {
                 loggedInUser: req.session.user.username,
                 listName: req.body.remMedia_list
             }
-        }).then(
-            exports.my_media_get(req, res)
-        )
+        }).then( () => {
+            res.redirect("http://localhost:3000/users/my-media");
+        })
     }
 }
 

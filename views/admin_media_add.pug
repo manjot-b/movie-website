@@ -20,13 +20,24 @@ block media_content
             div(class="admin_add_movie_content")
                 li
                     label(for="description") Description
-                    input(type="text", name="description", id="year")
+                    input(type="text", name="description", id="description")
             div(class="admin_add_movie_content")
                 li
                     label(for="director") Director/Creator
-                    input(type="text", name="director", id="year")
+                    input(type="text", name="director", id="director")
+            div(class="admin_add_movie_content")
+                li
+                    label(for="cast") Cast (separated by commas and no spaces)
+                    input(type="text", name="cast", id="cast")
+            div(class="admin_add_movie_content")
+                li
+                    label(for="genre") Genre (separated by commas and no spaces)
+                    input(type="text", name="genre", id="genre")
             div(class="admin_add_movie_content")
                 li
                     input(type="submit", value="Submit")
             if (success)
                 li(style="color:green") Added successfully!
+            else
+                each err in errors
+                    li(style = "color:red") #{err}

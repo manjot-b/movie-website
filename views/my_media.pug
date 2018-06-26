@@ -19,7 +19,7 @@ block content
                     br
                        
                     each media in medlist.media
-                        a(href="http://localhost:3000/catalog/" + media.name) #{media.name} (#{media.year})
+                        a(href="http://localhost:3000/catalog/" + media.id) #{media.name} (#{media.year})
                         br
                         form(action="/users/my-media", class="edit_profile_button", method="POST")
                             input(type="submit", value="Remove Media")

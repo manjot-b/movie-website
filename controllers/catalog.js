@@ -267,6 +267,14 @@ exports.media_post = (req, res) => {
 }
 
 exports.search_post = (req, res) => {
+    //var words = req.body.catalogSearchBox.split(' ');
+   // var query = "";
+
+    //words.forEach(word => {
+   //     query += word + '+';
+   // });
+
+   if (typeof req.body.catalogSearchBox != 'undefined') {
     var words = req.body.catalogSearchBox.split(' ');
     var query = "";
 
@@ -279,6 +287,7 @@ exports.search_post = (req, res) => {
         }
     }
     res.redirect('search?search=' + query)
+}
 }
 
 exports.search_get = (req, res) => {
