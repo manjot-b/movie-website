@@ -21,7 +21,7 @@ mixin review(username, review, rating, date, id, comments)
 block content
   div(class="media_container")
     h1(id="trailer") Movie Trailer
-    img(src="/pictures/posters/movie_poster.jpg", alt="#{media.name} poster") 
+    img(src="/pictures/posters/" + media.id + ".jpg", alt="#{media.name} poster") 
     h1(id="title2") #{media.name}
     form(action="/catalog/" + media.id, method="POST", id="rating")
       select(name="userList")

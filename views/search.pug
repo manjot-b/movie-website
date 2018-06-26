@@ -17,7 +17,7 @@ block content
         each result in searchResults
           tr
             th
-              img(src="/pictures/posters/movie_poster.jpg", alt="#{results.name} poster") 
+              img(src="/pictures/posters/" + result.id + ".jpg", alt="#{results.name} poster") 
             th 
               a(href="http://localhost:3000/catalog/" + result.id) #{result.name} 
             th #{result.year}

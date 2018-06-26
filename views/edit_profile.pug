@@ -3,18 +3,18 @@ block content
     br
     br
     div(class="login")
-      form(action="/users/profile", class="login_form", method="POST")
-        label First Name (Current: #[strong Mico])
+      form(action="/users/profile/" + un , class="login_form", method="POST")
+        label First Name (Current: #[strong #{fname}])
         br 
         input(type="text", name="firstName", id="first_name")
         br
 
-        label Last Name (Current: #[strong Tran])
+        label Last Name (Current: #[strong #{lname}])
         br 
         input(type="text", name="lastName", id="last_name")
         br
 
-        label Email (Current: #[strong mico@abc.com])
+        label Email (Current: #[strong #{email}])
         br 
         input(type="email", name="email", id="email")
         br

@@ -20,7 +20,7 @@ block media_content
         each result in searchResults
           tr
             th
-              img(src="/pictures/posters/movie_poster.jpg", alt="#{results.title} poster") 
+              img(src="/pictures/posters/" + result.id + ".jpg", alt="#{results.title} poster") 
             th #{result.id}
             th 
               a(href="http://localhost:3000/catalog/" + result.id) #{result.title}

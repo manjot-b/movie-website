@@ -15,15 +15,23 @@ block content
     div(class='profile_header tab')
         ul
             li
-                h1 My Profile: #[strong #{username}]
+                if (myprofile)
+                    h1 My Profile: #[strong #{username}]
+                else 
+                    h1 Profile: #[strong #{username}]
             li
                 img(src="/pictures/profile.png" alt ="Profile Picture" style="width:250px;height:250px;")
             li
-                h3 Friends: 14     
+                h3 Friends: #{count}   
             li
+                if (myprofile)
+                    form(action="/users/editprofile/", class="edit_profile_button", method="POST")
+                        input(type="submit", value="Edit Profile")
+                        input(name="current_user_fname", type="hidden", value=fname )
+                        input(name="current_user_lname", type="hidden", value=lname )
+                        input(name="current_user_email", type="hidden", value=email )
+                        input(name="current_user_un", type="hidden", value=username )
 
-                form(action="/users/editprofile", class="edit_profile_button", method="POST")
-                    input(type="submit", value="Edit Profile")
 
    
 
@@ -31,18 +39,25 @@ block content
         br
         ul
             li
-                h5 Name: 
+                h4 Name: #{fname} #{lname}
             li
-                h5 Email:  
-            li  
-                h5 Bio:
+                h4 Email: #{email}
 
-    div(class="medialist")
+    //div(class="medialist")
+    //    h2 #{username}'s Media List(s)
+    
+    div(class="medialist border")
         h2 #{username}'s Media List(s)
         ul
-            each media in media_list
-                li
-                    p #[em #{media.name}]
+            each medlist in media_list
+                li 
+                    h3 #{medlist.name}
+                         
+                    each media in medlist.media
+                        a(href="http://localhost:3000/catalog/" + media.id) #{media.name} (#{media.year})
+                        br
+                    br
+                
 
     div(class="activity border")
         h2 Recent Activity 
