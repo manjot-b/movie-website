@@ -18,10 +18,6 @@ router.get('/signup', userController.signup_get);
 
 router.post('/signup', userController.signup_post);
 
-router.get('/profile', userController.profile_get);
-
-router.post('/profile', userController.profile_post);
-
 router.get('/friends', userController.friends_get); 
 
 router.post('/friends', userController.friends_post);
@@ -38,8 +34,9 @@ router.get('/editprofile', userController.editprofile_get);
 
 router.post('/editprofile', userController.editprofile_post);
 
+router.post('/profile/:username', userController.profile_post);
 
-
+router.get('/profile/:username', userController.profile_get);
 
 
 module.exports = router;
