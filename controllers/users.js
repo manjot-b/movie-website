@@ -363,7 +363,7 @@ exports.my_media_post = (req, res) => {
     {
         var newList = {name:req.body.new_list_name, media:[]}
         media_list.push(newList);
-        Sequelize.query('INSERT INTO media_list VALUES (:title, :username)' , {
+        Sequelize.query('INSERT INTO media_list VALUES (:title, :username, CURRENT_TIMESTAMP())' , {
             type:Sequelize.QueryTypes.INSERT,
             replacements: {
                 title: req.body.new_list_name,

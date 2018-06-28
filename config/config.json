@@ -1,8 +1,8 @@
 {
     "development": {
-        "username" : "sql3243810",
-        "password" : "mnJMZPK3Uh",
-        "database" : "sql3243810",
+        "username" : "sql3245104",
+        "password" : "wcV1gLzwWg",
+        "database" : "sql3245104",
         "host" : "sql3.freesqldatabase.com",
         "dialect" : "mysql",
         "port" : "3306" 
